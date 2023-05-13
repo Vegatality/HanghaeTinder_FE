@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     /* reset css */
-    
+
     input {
         outline: none;
         border: none;
@@ -113,8 +113,6 @@ const GlobalStyle = createGlobalStyle`
         -ms-user-select: none;
         user-select: none;
     }
-
-
 
     /* HTML5 display-role reset for older browsers */
 

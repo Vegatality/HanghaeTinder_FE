@@ -1,4 +1,3 @@
-import { padStart } from "lodash";
 import { darken, lighten } from "polished";
 import React from "react";
 import styled, { css } from "styled-components";
@@ -32,6 +31,7 @@ const sizes = {
         height: "65px",
         width: "400px",
     },
+
     small: {
         fontSize: "20px",
         height: "50px",
@@ -67,13 +67,12 @@ const StyledButton = styled.button`
         transition: all 0.2s;
     }
     &:active {
-        filter: brightness(80%);
+        filter: brightness(90%);
         transition: all 0.2s;
     }
 
-    /* border-radius: ${(props) => props.radius && `${props.radius}px`};
-    margin-left: ${({ noMargin }) => (noMargin ? "0px" : "20px")};
-    align-self: ${({ position }) => position && "flex-end"}; */
+    box-shadow: ${({ outline }) =>
+        outline ? "rgba(0, 0, 0, 0.24) 0px 3px 8px" : "none"};
 
     /* 첫 번째를 기준으로 두 번째 요소의 CSS를 결정. 그래서 noMargin 속성 프로퍼티를 첫 번째한테 줘야 함 */
 
@@ -92,6 +91,7 @@ function Buttons({
     fontColor = "white",
     bgColor = "itemColor",
     btPosition,
+    outline,
     ...rest
 }) {
     return (
@@ -100,6 +100,7 @@ function Buttons({
             fontColor={fontColor}
             bgColor={bgColor}
             btPosition={btPosition}
+            outline={outline}
             {...rest}
         >
             {children}

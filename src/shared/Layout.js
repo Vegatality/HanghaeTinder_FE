@@ -15,7 +15,7 @@ const WidthLimitBox = styled.div`
     min-width: 700px;
 
     /* 높이 제한 */
-    height: 100%;
+    height: 920px;
 
     /* border-box:  padding으로 인해서 더 커지는 것을 막아줌.
         테두리를 기준으로 크기를 정한다.

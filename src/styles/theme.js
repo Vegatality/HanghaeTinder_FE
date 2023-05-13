@@ -7,6 +7,9 @@ export const colors = {
     white: "#fff",
     black: "black",
 
+    /* common border, font, color style*/
+    borderColor: "#FE5665",
+
     // mainBackgroundColor: "#FE3A72",
     // mainBackgroundColor: "#5292c6",
     // mainColor: "#5292c6",
