@@ -4,7 +4,7 @@
 export const colors = {
     itemColor: `linear-gradient(to right, #FE3A72, #FF625F)`,
     buttonHoverColor: "#FF625F",
-    mainBgColor: "#F9F8F9",
+    mainBgColor: "#F8EBF8",
     white: "#fff",
     black: "black"
 
