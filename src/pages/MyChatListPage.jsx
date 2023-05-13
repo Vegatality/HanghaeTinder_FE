@@ -1,7 +1,9 @@
 import React from "react";
 
-function MChatListPage() {
-    return <div>MChatListPage</div>;
+function MyChatListPage() {
+    return <>
+    
+    </>;
 }
 
-export default MChatListPage;
+export default MyChatListPage;
