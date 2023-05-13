@@ -12,11 +12,11 @@ function Router() {
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<MainPage />}/>
-            <Route path='/' element={<SignInPage />}/>
-            <Route path='/' element={<SignUpPage />}/>
-            <Route path='/' element={<MatchingPage />}/>
-            <Route path='/' element={<MyChatListPage />}/>
-            <Route path='/' element={<ChattingPage />}/>
+            <Route path='/signin' element={<SignInPage />}/>
+            <Route path='/signup' element={<SignUpPage />}/>
+            <Route path='/match' element={<MatchingPage />}/>
+            <Route path='/chatlist' element={<MyChatListPage />}/>
+            <Route path='/chatpage' element={<ChattingPage />}/>
         </Routes>
     </BrowserRouter>
   )
