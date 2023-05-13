@@ -24,18 +24,18 @@ const colorStyles = css`
 const sizes = {
     large: {
         fontSize: "40px",
-        paddingBlock: "30px",
-        paddingInline: "120px",
+        height: "95px",
+        width: "500px",
     },
     medium: {
         fontSize: "25px",
-        paddingBlock: "20px",
-        paddingInline: "90px",
+        height: "65px",
+        width: "400px",
     },
     small: {
         fontSize: "20px",
-        paddingBlock: "15px",
-        paddingInline: "30px",
+        height: "50px",
+        width: "200px",
     },
 };
 
@@ -83,6 +83,8 @@ const StyledButton = styled.button`
     /* 색상 */
     ${colorStyles} /* 위치 */
 `;
+
+/* 버튼 배경&글씨 색상 등록은 theme.js에서 하세요 */
 
 function Buttons({
     children,
