@@ -10,7 +10,7 @@ export const Layout = () => {
 };
 
 const WidthLimitBox = styled.div`
-    /* 크기제한 */
+    /* 넓이 제한 */
     max-width: 800px;
     min-width: 700px;
     

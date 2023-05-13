@@ -26,16 +26,20 @@ function MainPage() {
                     >
                         Login
                     </StButton>
-                    <img
-                        style={{
-                            width: "1324px",
-                            height: "251px",
-                            transform: `translate(5%)`,
-                        }}
-                        src="../image/MainPageLogo.svg"
-                        alt="photoThumb"
-                    />
-                    <WelcomeText>마음에 드는 친구와 대화해 보세요!</WelcomeText>
+                    <div>
+                        <img
+                            style={{
+                                width: "1324px",
+                                height: "251px",
+                                transform: `translate(25%)`,
+                            }}
+                            src="../image/MainPageLogo.svg"
+                            alt="photoThumb"
+                        />
+                        <WelcomeText>
+                            마음에 드는 친구와 대화해 보세요!
+                        </WelcomeText>
+                    </div>
                     <Buttons
                         size="large"
                         bgColor="itemColor"
@@ -87,16 +91,16 @@ const Canvas = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    // justify-content: center;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 40px;
     z-index: 1;
 `;
 
 const StButton = styled(Buttons)`
-    position: relative;
+    position: absolute;
     top: 30px;
-    left: 45%;
+    right: 45px;
     /* @media(max-width: 800px){
         .div{
             display: none;
