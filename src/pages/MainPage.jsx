@@ -3,14 +3,27 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import Buttons from "../components/assets/Button";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
+    const navigate = useNavigate();
+    const moveToSignIn = () => {
+        navigate("/signin");
+    };
+    const moveToSignUp = () => {
+        navigate("/signup");
+    };
+
     return (
         <>
             <Dark></Dark>
             <Wrapper>
                 <Canvas>
-                    <StButton size="small" bgColor="itemColor">
+                    <StButton
+                        size="small"
+                        bgColor="itemColor"
+                        onClick={moveToSignIn}
+                    >
                         Login
                     </StButton>
                     <img
@@ -23,7 +36,11 @@ function MainPage() {
                         alt="photoThumb"
                     />
                     <WelcomeText>마음에 드는 친구와 대화해 보세요!</WelcomeText>
-                    <Buttons size="large" bgColor="itemColor">
+                    <Buttons
+                        size="large"
+                        bgColor="itemColor"
+                        onClick={moveToSignUp}
+                    >
                         Matching Start
                     </Buttons>
                 </Canvas>
@@ -80,6 +97,11 @@ const StButton = styled(Buttons)`
     position: relative;
     top: 30px;
     left: 45%;
+    /* @media(max-width: 800px){
+        .div{
+            display: none;
+        }
+    } */
 `;
 
 // const StButton = styled.button`
