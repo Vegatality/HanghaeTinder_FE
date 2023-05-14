@@ -10,9 +10,6 @@ function MainPage() {
     const moveToSignIn = () => {
         navigate("/signin");
     };
-    const moveToSignUp = () => {
-        navigate("/signup");
-    };
 
     return (
         <>
@@ -26,12 +23,17 @@ function MainPage() {
                     >
                         Login
                     </StButton>
-                    <div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
                         <img
                             style={{
                                 width: "1324px",
                                 height: "251px",
-                                transform: `translate(25%)`,
                             }}
                             src="../image/MainPageLogo.svg"
                             alt="photoThumb"
@@ -40,11 +42,7 @@ function MainPage() {
                             마음에 드는 친구와 대화해 보세요!
                         </WelcomeText>
                     </div>
-                    <Buttons
-                        size="large"
-                        bgColor="itemColor"
-                        onClick={moveToSignUp}
-                    >
+                    <Buttons size="large" bgColor="itemColor">
                         Matching Start
                     </Buttons>
                 </Canvas>
