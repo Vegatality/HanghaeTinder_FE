@@ -29,7 +29,7 @@ import axios from "./axiosToken";
 // axios 옵션 객체로 넣기
 const signUpDb = async (inputs) => {
     await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/user/signup`,
+        `/user/signup`,
         inputs
         // {
         //     headers: {
@@ -42,7 +42,7 @@ const signUpDb = async (inputs) => {
 /* 로그인 */
 const signInDb = async (inputs) => {
     const response = await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER_URL}/user/login`,
+        `/user/login`,
         inputs
         // {
         //     headers: {
@@ -55,3 +55,32 @@ const signInDb = async (inputs) => {
 };
 
 export { signUpDb, signInDb };
+
+// /* 회원가입 */
+// // axios 옵션 객체로 넣기
+// const signUpDb = async (inputs) => {
+//     await axios.post(
+//         `${process.env.REACT_APP_TEST_SERVER_URL}/user/signup`,
+//         inputs
+//         // {
+//         //     headers: {
+//         //         withCredentials: true, // 쿠키 cors 통신 설정
+//         //     },
+//         // }
+//     );
+// };
+
+// /* 로그인 */
+// const signInDb = async (inputs) => {
+//     const response = await axios.post(
+//         `${process.env.REACT_APP_TEST_SERVER_URL}/user/login`,
+//         inputs
+//         // {
+//         //     headers: {
+//         //         withCredentials: true, // 쿠키 cors 통신 설정
+//         //     },
+//         // }
+//     );
+//     // console.log(response);
+//     return response;
+// };

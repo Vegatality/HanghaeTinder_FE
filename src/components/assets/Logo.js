@@ -6,16 +6,20 @@ import { styled } from "styled-components";
 function Logo() {
     return (
         <EditLogo
-            src={`${process.env.PUBLIC_URL}/image/MainPageLogo.svg`}
-            // src="/image/jpgLogo.jpg"
-            alt="photoThumb"
+        // src={`${process.env.PUBLIC_URL}/image/MainPageLogo.svg`}
+        // src="/image/jpgLogo.jpg"
+        // alt="photoThumb"
         />
     );
 }
 
-export const EditLogo = styled.img`
-    width: 500px;
+export const EditLogo = styled.div`
+    width: 200px;
+    height: 200px;
     transform: translate(-5%, 0);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("/image/MainPageLogo.svg");
 `;
 
 // export const EditInstaTinderLogo = styled(InstaTinderLogo)`

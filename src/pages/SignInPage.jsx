@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import Logo from "../components/assets/Logo";
+import Logo, { EditLogo } from "../components/assets/Logo";
 import Buttons from "../components/assets/Button";
 import { useNavigate } from "react-router-dom";
 import { cookie } from "../util/cookie";
@@ -30,7 +30,7 @@ function SignInPage() {
     return (
         <Wrapper>
             <Canvas>
-                <Logo />
+                <SignInLogo />
                 <ContentArea>
                     <StInput placeholder="Input Email" />
                     <StInput placeholder="Input Password" />
@@ -73,7 +73,7 @@ const Canvas = styled.div`
     align-items: center;
     /* background: green; */
     padding: 60px 90px 60px 90px;
-    gap: 80px;
+    gap: 30px;
 `;
 
 // const LogoArea = styled.div`
@@ -81,6 +81,12 @@ const Canvas = styled.div`
 //     /* background-color: yellow; */
 //     /* padding-left: 70px; */
 // `;
+
+const SignInLogo = styled(EditLogo)`
+    width: 300px;
+    height: 100px;
+    transform: translateX(3%);
+`;
 
 const ContentArea = styled.div`
     display: flex;

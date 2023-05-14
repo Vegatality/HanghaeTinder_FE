@@ -4,6 +4,7 @@ import Buttons from "../components/assets/Button";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import { StInput } from "./SignInPage";
 import Selector from "../util/Selector";
+import Logo, { EditLogo } from "../components/assets/Logo";
 
 function SignUpPage() {
     const [profile, setProfile] = useState(false);
@@ -12,6 +13,7 @@ function SignUpPage() {
         <Wrapper>
             <Canvas>
                 <Section1>
+                    <AbsoluteLogo />
                     <DescContainer>
                         <CustomLabel>Name</CustomLabel>
                         <div>
@@ -114,11 +116,11 @@ function SignUpPage() {
                                 <img
                                     alt="photoThumb"
                                     style={{
-                                        width: "100%",
-                                        height: "100%",
+                                        width: "350px",
+                                        height: "350px",
                                         objectFit: "cover",
                                     }}
-                                    // src={`${process.env.PUBLIC_URL}/image/InstaTinderLogo.svg`}
+                                    src={`${process.env.PUBLIC_URL}/image/InstaTinderLogo.svg`}
                                 />
                             ) : (
                                 <PlusImage />
@@ -144,6 +146,11 @@ function SignUpPage() {
 const Wrapper = styled.div`
     width: 100%;
     height: 100%;
+    /* box-sizing: border-box; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     /* background-color: #e9911f; */
 `;
 
@@ -151,12 +158,20 @@ const Canvas = styled.div`
     display: flex;
     flex-direction: row;
     gap: 20px;
-    width: 1200px;
+    width: fit-content;
     margin: auto;
     padding: 30px;
-
     border-radius: 10px;
     background-color: white;
+`;
+
+const AbsoluteLogo = styled(EditLogo)`
+    /* position: absolute; */
+    width: 130px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 3;
 `;
 
 const Section1 = styled.div`
