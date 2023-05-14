@@ -15,10 +15,12 @@ const WidthLimitBox = styled.div`
     min-width: 700px;
 
     /* 높이 제한 */
+
     max-height: 920px;
     min-height: 920px;
     /*  == height: 920px; */
     /*  != height: 100%; */
+
 
     box-sizing: border-box;
     /* padding-block: 60px; */
