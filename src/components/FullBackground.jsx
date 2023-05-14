@@ -12,6 +12,7 @@ function FullBackground() {
 const FScreen = styled.div`
     width: 100vw;
     height: 100vh;
+    padding-block: 10%;
     background: ${({ theme }) => theme["mainBgColor"]};
 `;
 export default FullBackground;
