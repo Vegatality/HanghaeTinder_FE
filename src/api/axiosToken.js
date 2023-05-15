@@ -12,8 +12,8 @@ const instance = axios.create({
 /* const instance = axios.create({
     baseURL: 'https://api.example.com'
   });
-   
-  // Instance를 만든 후  defalut 값을 수정할 수 있다. 
+
+  // Instance를 만든 후  defalut 값을 수정할 수 있다.
   instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
   instance.defaults.timeout = 2500; */
 

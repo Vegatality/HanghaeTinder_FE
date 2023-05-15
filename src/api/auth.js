@@ -1,5 +1,5 @@
-// import axios from "axios";
-import axios from "./axiosToken";
+import axios from "axios";
+import tokenAxios from "./axiosToken";
 
 // set PORT=4000 && react-scripts start
 
@@ -28,8 +28,9 @@ import axios from "./axiosToken";
 /* 회원가입 */
 // axios 옵션 객체로 넣기
 const signUpDb = async (inputs) => {
-    await axios.post(
-        `/user/signup`,
+    console.log(process.env.REACT_APP_TEST_SERVER_URL);
+    const response = await axios.post(
+        `${process.env.REACT_APP_TEST_SERVER_URL}/api/user/signup`,
         inputs
         // {
         //     headers: {
@@ -37,12 +38,13 @@ const signUpDb = async (inputs) => {
         //     },
         // }
     );
+    return response;
 };
 
 /* 로그인 */
 const signInDb = async (inputs) => {
     const response = await axios.post(
-        `/user/login`,
+        `${process.env.REACT_APP_TEST_SERVER_URL}/api/user/login`,
         inputs
         // {
         //     headers: {

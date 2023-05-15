@@ -1,44 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import Logo, { EditLogo } from "../components/assets/Logo";
 import Buttons from "../components/assets/Button";
 import { useNavigate } from "react-router-dom";
 import { cookie } from "../util/cookie";
+import { useInput } from "../hooks/useInput";
+import jwtDecode from "jwt-decode";
+import { useMutation } from "react-query";
+import { signInDb } from "../api/auth";
+import { useDispatch } from "react-redux";
+import { SET_TOKEN } from "../redux/modules/authSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 function SignInPage() {
+    const [inputs, setInputs, deleteInputs, validateInputs] = useInput({
+        userId: "",
+        password: "",
+    });
+    const [isMessage, setIsMessage] = useState(false);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const moveToSignup = () => {
         navigate("/signup");
     };
+    const moveToMatch = () => {
+        navigate("/match");
+    };
 
-    /* Cookies().set 쿠키에 저장.
-    path (string) : 쿠키 경로, / 모든 경로 페이지에서 쿠키에 액세스할 수 있도록 하려면 경로로 사용
-    expires (Date) : 쿠키의 절대 만료 날짜
-    maxAge (number) : 클라이언트가 쿠키를 수신한 시점부터 쿠키의 상대적인 최대 수명(초)
-    secure (boolean) : HTTPS를 통해서만 액세스할 수 있습니까? */
+    const onLoginHandler = () => {
+        if (validateInputs("email") && validateInputs("password")) {
+            mutation.mutate(inputs);
+        } else {
+            console.log("Incorrect password or ID type");
+        }
+    };
 
-    cookie.set("auth", "token", {
-        path: "/",
-        // secure: "/",
-        // expires: expireDate,
-        // expires: 3000,
-        // maxAge: 500, // maxAge는 숫자 1이 1초
-        // expires: new Date().getMinutes() + 1,
+    // -------------------------------------------SignIn---------------------------
+
+    const mutation = useMutation(signInDb, {
+        // onMutate: () => {
+        //     //mutationFunction인 signIndb가 실행되기 전에 실행. mutationFunc가 받을 동일한 변수가 전달됨.
+        //     // console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
+        // },
+        onSuccess: (data) => {
+            /* 입력 초기화 */
+            // /* 토큰 해체 및 쿠키에 저장. */
+            const token = data.headers.authorization.split(" ")[1];
+
+            const decodedToken = jwtDecode(token);
+            console.log("디코드 정보:", decodedToken);
+            const { sub, exp } = decodedToken; // => {sub: 'asdf12@gmail.com', auth: 'USER', iat: 1684160574, exp: 1684161174}
+            const expireDate = new Date(exp * 1000); // 날짜단위로 변환해서 넣기.
+            cookie.set("auth", token, {
+                expires: expireDate,
+                userId: sub,
+            });
+
+            /*  Reducer 에서 토큰 관리할 것임. useName도 Page 넘어갈 때마다 useSelector로 받을 수 있게 넘기는 거
+            페이지 넘어갈 때 Reducer에서 토큰 꺼내와서 살아있는지 확인할 거임. */
+            dispatch(
+                SET_TOKEN({
+                    userId: sub,
+                })
+            );
+            setIsMessage(true);
+            toast.success(`로그인 성공! 환영합니다 ${sub}님`, {
+                position: toast.POSITION.TOP_CENTER,
+                toastId: "empty-comment-toast",
+            });
+            // alert(`로그인 성공! 환영합니다 ${name}님`);
+            // setIsError({ error: false, message: "" });
+            deleteInputs();
+
+            // 페이지 이동
+            moveToMatch();
+        },
+        onError: (error) => {
+            console.log(error);
+            toast.error(`등록되지 않은 유저입니다.`, {
+                position: toast.POSITION.TOP_CENTER,
+                toastId: "empty-comment-toast",
+            });
+        },
     });
 
     return (
         <Wrapper>
             <Canvas>
+                {isMessage && <ToastContainer />}
                 <SignInLogo />
                 <ContentArea>
-                    <StInput placeholder="Input Email" />
-                    <StInput placeholder="Input Password" />
+                    <StInput
+                        autoFocus={true}
+                        name="userId"
+                        value={inputs.userId}
+                        onChange={setInputs}
+                        placeholder="Input Email"
+                    />
+                    <StInput
+                        name="password"
+                        value={inputs.password}
+                        onChange={setInputs}
+                        placeholder="Input Password"
+                    />
                     <Buttons
                         size="medium"
                         bgColor="itemColor"
                         outline
-                        onClick={() => navigate("/match")}
+                        onClick={onLoginHandler}
                     >
                         LogIn
                     </Buttons>
@@ -102,18 +171,22 @@ export const StInput = styled.input`
 
     /* text-align: center; */
     box-sizing: border-box;
-    padding-inline: 10px;
+    padding-inline: 14px;
     border-radius: 10px;
-    border: 2px solid ${({ theme }) => theme && theme["borderColor"]};
+    border: 1px solid ${({ theme }) => theme && theme["borderColor"]};
 
-    text-align: center;
+    text-align: left;
     font-size: x-large;
     color: ${({ theme }) => theme && theme["borderColor"]};
 
     /* margin-block: 20px; */
     &::placeholder {
-        /* text-align: center; */
+        text-align: left;
         font-size: x-large;
+    }
+
+    &:focus {
+        border: 2px solid ${({ theme }) => theme["borderColor"]};
     }
 `;
 

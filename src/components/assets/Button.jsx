@@ -67,12 +67,15 @@ const StyledButton = styled.button`
         transition: all 0.2s;
     }
     &:active {
-        filter: brightness(90%);
-        transition: all 0.2s;
+        background-color: #c84e71;
+        /* filter: brightness(90%); */
+        transition-duration: 100ms;
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     box-shadow: ${({ outline }) =>
-        outline ? "rgba(0, 0, 0, 0.24) 0px 3px 8px" : "none"};
+        outline ? "rgb(178 94 94 / 44%) 2px 3px 4px;" : "none"};
 
     /* 첫 번째를 기준으로 두 번째 요소의 CSS를 결정. 그래서 noMargin 속성 프로퍼티를 첫 번째한테 줘야 함 */
 

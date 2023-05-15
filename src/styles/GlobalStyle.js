@@ -160,6 +160,9 @@ const GlobalStyle = createGlobalStyle`
     display: none;
     }
 
+
+    
+
 `;
 
 export default GlobalStyle;
