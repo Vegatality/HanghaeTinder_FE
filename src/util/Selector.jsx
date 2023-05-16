@@ -8,7 +8,9 @@ import { styled } from "styled-components";
 import { darken, lighten, linearGradient } from "polished";
 
 const animatedComponents = makeAnimated();
-const interestOptions = [
+
+// 서버에서 id(숫자)를 보내줌. 근데 인덱스가 아니라 데이터베이스 번호라서 -1 해서 인덱스번호로 찾아야 함.
+export const interestOptions = [
     { value: "workout", label: "Workout", color: "#00B8D9", isFixed: true },
     // { value: "game", label: "Game", color: "#0052CC", isDisabled: true },
     { value: "game", label: "Game", color: "#0052CC" },
@@ -22,7 +24,7 @@ const interestOptions = [
     { value: "art", label: "Art", color: "#666666" },
 ];
 
-export default function Selector({ selectedOptions, setSelectedOptions }) {
+function Selector({ selectedOptions, setSelectedOptions }) {
     /* setValue 길이가 3이상 증가 안되게 막음 */
     const handleChange = (selected) => {
         if (selected.length > 3) {
@@ -153,3 +155,5 @@ const StyledSelect = styled(Select)`
         }
     }
 `;
+
+export default React.memo(Selector);

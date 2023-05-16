@@ -77,6 +77,7 @@ function SignInPage() {
         },
         onError: (error) => {
             console.log(error);
+            setIsMessage(true);
             toast.error(`등록되지 않은 유저입니다.`, {
                 position: toast.POSITION.TOP_CENTER,
                 toastId: "empty-comment-toast",

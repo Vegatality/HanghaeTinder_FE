@@ -86,7 +86,6 @@ function SignUpPage({ theme }) {
         }
     };
     /* selector - favorites */
-    console.log("selectedOptions >>>", selectedOptions);
 
     const navigation = useNavigate();
     const moveToBack = () => {
@@ -150,6 +149,7 @@ function SignUpPage({ theme }) {
     const mutation = useMutation(signUpDb, {
         onSuccess: (data) => {
             console.log("data >>>", data);
+            navigation("/signin");
         },
         onError: (error) => {
             console.log("error >>>", error);

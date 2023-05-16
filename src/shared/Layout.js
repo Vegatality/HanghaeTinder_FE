@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Route } from "react-router-dom";
 import { styled } from "styled-components";
 
 export const Layout = () => {
