@@ -22,15 +22,20 @@ function MatchingPage() {
 
     //* 전체유저목록 조회
 
-    const { data: userInfo, isLoading, isError } = useQuery("getUserInfo", usersInfo, {
+    const { data: userInfo, isLoading: userIsLoading, isError:userIsError } = useQuery("getUserInfo", usersInfo, {
         enabled: filter === false,
+        // enabled: !!filter,
         refetchOnWindowFocus: false,
+        retry: true,
+        retryDelay: 1000
     })
-
     //* 좋아요유저목록 조회
-    const { data: FilterUser } = useQuery("getFilterUserInfo", LikeUsers, {
+    const { data: FilterUser, isLoading: FilterIsLoading, isError:FilterIsError, error } = useQuery("getFilterUserInfo", LikeUsers, {
         enabled: filter === true,
-        refetchOnWindowFocus: false
+        // enabled: !filter,
+        refetchOnWindowFocus: false,
+        retry: true,
+        retryDelay: 1000
     })
 
     const userFilter = () => {
@@ -74,18 +79,17 @@ function MatchingPage() {
     };
 
 
-    if (isLoading) {
+    if (userIsLoading || FilterIsLoading) {
         console.log("로딩중")
         return (
             <div>
-                <p>
-                    Loading{Loading}
-                </p>
+                <Loading />
             </div>
         )
     }
 
-    if (isError) {
+    if (userIsError || FilterIsError) {
+        console.log(error)
         return (
             <div>
                 <p>
@@ -94,13 +98,13 @@ function MatchingPage() {
             </div>
         )
     }
-
+    
     return (
         <>
             <MatchContentWrap>
                 <MatchContentBox>
-                    {!filter && userInfo &&
-                        userInfo.filter((item, idx) => idx === 0).map((e, i) => {
+                    {!filter && userInfo?.data &&
+                        userInfo?.data?.filter((item, idx) => idx === 0).map((e, i) => {
 
                             interestOptions.filter((_, idx) => e.favorites.includes(idx + 1)).map((ele, id) => {
 
@@ -178,8 +182,8 @@ function MatchingPage() {
 
                     }
 
-                    {filter && FilterUser &&
-                        FilterUser.filter((item, idx) => idx === 0).map((e, i) => {
+                    {filter && FilterUser?.data &&
+                        FilterUser?.data?.filter((item, idx) => idx === 0).map((e, i) => {
                             return (
                                 <div key={i}>
                                     <Link to={"/"}>

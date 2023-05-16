@@ -6,14 +6,14 @@ function Loading() {
     useEffect(()=>{
         intervalTime = setInterval(() => {
             setLoadingText((prev)=>prev === "◼◼◼◼◼"? "◼" : prev + "◼")
-        }, 250);
+        }, 150);
 
         return ()=> {
             clearInterval(intervalTime)
         }
     })
   return (
-    <div>{loadingText}</div>
+    <span>Loading{loadingText}</span>
   )
 }
 
