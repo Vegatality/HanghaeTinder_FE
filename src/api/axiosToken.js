@@ -8,7 +8,6 @@ const instance = axios.create({
     // headers: { Authorization: `Bearer ${token}` },
 });
 instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
 // Instance를 만들 때 설정의 default 값을 설정할 수 있다.
 /* const instance = axios.create({
     baseURL: 'https://api.example.com'
