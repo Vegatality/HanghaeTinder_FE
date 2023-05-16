@@ -45,6 +45,8 @@ function SignInPage() {
         onSuccess: (data) => {
             /* 입력 초기화 */
             // /* 토큰 해체 및 쿠키에 저장. */
+            /* 그냥 Bearer 떼고 넣자! */
+            const rawJwtToken = data.headers.authorization;
             const token = data.headers.authorization.split(" ")[1];
 
             const decodedToken = jwtDecode(token);

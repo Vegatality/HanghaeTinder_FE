@@ -9,40 +9,47 @@ import Buttons from "../components/assets/Button";
 import { usersInfo, clickLike, clickdisLike, LikeUsers } from "../api/match";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { interestOptions } from "../util/Selector";
-import Loading from "../components/Loading"
-
-
+import Loading from "../components/Loading";
 
 function MatchingPage() {
-    const [filter, setFilter] = useState(false)
+    const [filter, setFilter] = useState(false);
     const queryClient = useQueryClient();
     //TODO filter아이콘 색 구분으로 filter모드인지 구분하기
-    //TODO 전체유저목록 조회쿼리에 enabled 옵션에 !filter 반대로 좋아요 북마크 쿼리엔 그냥 filter  
+    //TODO 전체유저목록 조회쿼리에 enabled 옵션에 !filter 반대로 좋아요 북마크 쿼리엔 그냥 filter
     //TODO setFilter(!filter)
 
     //* 전체유저목록 조회
 
-    const { data: userInfo, isLoading: userIsLoading, isError:userIsError } = useQuery("getUserInfo", usersInfo, {
+    const {
+        data: userInfo,
+        isLoading: userIsLoading,
+        isError: userIsError,
+    } = useQuery("getUserInfo", usersInfo, {
         enabled: filter === false,
         // enabled: !!filter,
         refetchOnWindowFocus: false,
         retry: true,
-        retryDelay: 1000
-    })
+        retryDelay: 1000,
+    });
     //* 좋아요유저목록 조회
-    const { data: FilterUser, isLoading: FilterIsLoading, isError:FilterIsError, error } = useQuery("getFilterUserInfo", LikeUsers, {
+    const {
+        data: FilterUser,
+        isLoading: FilterIsLoading,
+        isError: FilterIsError,
+        error,
+    } = useQuery("getFilterUserInfo", LikeUsers, {
         enabled: filter === true,
         // enabled: !filter,
         refetchOnWindowFocus: false,
         retry: true,
-        retryDelay: 1000
-    })
+        retryDelay: 1000,
+    });
 
     const userFilter = () => {
-        setFilter(!filter)
+        setFilter(!filter);
         queryClient.invalidateQueries("getUserInfo");
         queryClient.invalidateQueries("getFilterUserInfo");
-    }
+    };
     // //* 전체유저목록 조회 Mutation
     // const userInfoMutation = useMutation(usersInfo, {
     //     onSuccess: () => {
@@ -78,184 +85,229 @@ function MatchingPage() {
         likeMutation.mutate(id);
     };
 
-
     if (userIsLoading || FilterIsLoading) {
-        console.log("로딩중")
+        console.log("로딩중");
         return (
             <div>
                 <Loading />
             </div>
-        )
+        );
     }
 
     if (userIsError || FilterIsError) {
-        console.log(error)
+        console.log(error);
         return (
             <div>
-                <p>
-                    Loading failed...
-                </p>
+                <p>Loading failed...</p>
             </div>
-        )
+        );
     }
-    
+
     return (
         <>
             <MatchContentWrap>
                 <MatchContentBox>
-                    {!filter && userInfo?.data &&
-                        userInfo?.data?.filter((item, idx) => idx === 0).map((e, i) => {
-
-                            interestOptions.filter((_, idx) => e.favorites.includes(idx + 1)).map((ele, id) => {
-
-                            })
-                            return (
-                                <div key={i}>
-                                    <Link to={"/"}>
-                                        <MatchLogoImage
-                                            src="../image/MainPageLogo.svg"
-                                            alt="photoThumb"
-                                        />
-                                    </Link>
-                                    <InFoContainer>
-                                        <Nickname>
-                                            {e.nickname}<span>( {e.gender}, {e.age} )</span>
-                                        </Nickname>
-
-                                        <Link to={"/chatlist"}>
-                                            <ChatListLinkIcon />
+                    {!filter &&
+                        userInfo?.data &&
+                        userInfo?.data
+                            ?.filter((item, idx) => idx === 0)
+                            .map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        <Link to={"/"}>
+                                            <MatchLogoImage
+                                                src="../image/MainPageLogo.svg"
+                                                alt="photoThumb"
+                                            />
                                         </Link>
+                                        <InFoContainer>
+                                            <Nickname>
+                                                {e.nickname}
+                                                <span>
+                                                    ( {e.gender}, {e.age} )
+                                                </span>
+                                            </Nickname>
 
-                                        <FilterBtn onClick={() => {
-                                            userFilter()
-                                        }}>
-                                            {!filter ? <FilterIcon /> : <OnFilterIcon />}
-                                        </FilterBtn>
-                                    </InFoContainer>
-                                    <MatchMainItemBox>
-                                        <MatchImg
-                                            src={e.img}
-                                            alt="photoThumb"
-                                        />
-                                        <FavoriteBox>
-                                            <FavoriteTitle>Favorite</FavoriteTitle>
-                                            <FavoriteList>
-                                                {
-                                                    interestOptions.filter((_, idx) => e.favorites.includes(idx + 1)).map((ele, idx) => {
-                                                        return (
-                                                            <li key={idx}>{ele.value}</li>
+                                            <Link to={"/chatlist"}>
+                                                <ChatListLinkIcon />
+                                            </Link>
+
+                                            <FilterBtn
+                                                onClick={() => {
+                                                    userFilter();
+                                                }}
+                                            >
+                                                {!filter ? (
+                                                    <FilterIcon />
+                                                ) : (
+                                                    <OnFilterIcon />
+                                                )}
+                                            </FilterBtn>
+                                        </InFoContainer>
+                                        <MatchMainItemBox>
+                                            <MatchImg
+                                                src={e.img}
+                                                alt="photoThumb"
+                                            />
+                                            <FavoriteBox>
+                                                <FavoriteTitle>
+                                                    Favorite
+                                                </FavoriteTitle>
+                                                <FavoriteList>
+                                                    {interestOptions
+                                                        .filter((_, idx) =>
+                                                            e.favorites.includes(
+                                                                idx + 1
+                                                            )
                                                         )
-                                                    })
-                                                }
-                                            </FavoriteList>
-                                        </FavoriteBox>
+                                                        .map((ele, idx) => {
+                                                            return (
+                                                                <li key={idx}>
+                                                                    {ele.value}
+                                                                </li>
+                                                            );
+                                                        })}
+                                                </FavoriteList>
+                                            </FavoriteBox>
 
-                                        <MatchBtnBox>
-                                            <Buttons
-                                                size="medium"
-                                                bgColor="itemColor"
-                                                fontColor="black"
-                                                outline
-                                                onClick={() => {
-                                                    userDislikeHandler(e.id)
-                                                }}
-                                            >
-                                                <FaHandshakeSlash color="white" size={36} />
-                                            </Buttons>
+                                            <MatchBtnBox>
+                                                <Buttons
+                                                    size="medium"
+                                                    bgColor="itemColor"
+                                                    fontColor="black"
+                                                    outline
+                                                    onClick={() => {
+                                                        userDislikeHandler(
+                                                            e.id
+                                                        );
+                                                    }}
+                                                >
+                                                    <FaHandshakeSlash
+                                                        color="white"
+                                                        size={36}
+                                                    />
+                                                </Buttons>
 
-                                            <Buttons
-                                                size="medium"
-                                                bgColor="itemColor"
-                                                fontColor="black"
-                                                outline
-                                                onClick={() => {
-                                                    userLikeHandler(e.id)
-                                                }}
-                                            >
-                                                <TbHeartHandshake color="white" size={40} />
-                                            </Buttons>
-                                        </MatchBtnBox>
-                                    </MatchMainItemBox>
-                                </div>
-                            )
-                        })
+                                                <Buttons
+                                                    size="medium"
+                                                    bgColor="itemColor"
+                                                    fontColor="black"
+                                                    outline
+                                                    onClick={() => {
+                                                        userLikeHandler(e.id);
+                                                    }}
+                                                >
+                                                    <TbHeartHandshake
+                                                        color="white"
+                                                        size={40}
+                                                    />
+                                                </Buttons>
+                                            </MatchBtnBox>
+                                        </MatchMainItemBox>
+                                    </div>
+                                );
+                            })}
 
-                    }
-
-                    {filter && FilterUser?.data &&
-                        FilterUser?.data?.filter((item, idx) => idx === 0).map((e, i) => {
-                            return (
-                                <div key={i}>
-                                    <Link to={"/"}>
-                                        <MatchLogoImage
-                                            src="../image/MainPageLogo.svg"
-                                            alt="photoThumb"
-                                        />
-                                    </Link>
-                                    <InFoContainer>
-                                        <Nickname>
-                                            {e.nickname}<span>( {e.gender}, {e.age} )</span>
-                                        </Nickname>
-
-                                        <Link to={"/chatlist"}>
-                                            <ChatListLinkIcon />
+                    {filter &&
+                        FilterUser?.data &&
+                        FilterUser?.data
+                            ?.filter((item, idx) => idx === 0)
+                            .map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        <Link to={"/"}>
+                                            <MatchLogoImage
+                                                src="../image/MainPageLogo.svg"
+                                                alt="photoThumb"
+                                            />
                                         </Link>
+                                        <InFoContainer>
+                                            <Nickname>
+                                                {e.nickname}
+                                                <span>
+                                                    ( {e.gender}, {e.age} )
+                                                </span>
+                                            </Nickname>
 
-                                        <FilterBtn onClick={() => {
-                                            userFilter()
-                                        }}>
-                                            {!filter ? <FilterIcon /> : <OnFilterIcon />}
-                                        </FilterBtn>
-                                    </InFoContainer>
-                                    <MatchMainItemBox>
-                                        <MatchImg
-                                            src={e.img}
-                                            alt="photoThumb"
-                                        />
-                                        <FavoriteBox>
-                                            <FavoriteTitle>Favorite</FavoriteTitle>
-                                            <FavoriteList>
-                                                {
-                                                    interestOptions.filter((_, idx) => e.favorites.includes(idx + 1)).map((ele, idx) => {
-                                                        return (
-                                                            <li key={idx}>{ele.value}</li>
+                                            <Link to={"/chatlist"}>
+                                                <ChatListLinkIcon />
+                                            </Link>
+
+                                            <FilterBtn
+                                                onClick={() => {
+                                                    userFilter();
+                                                }}
+                                            >
+                                                {!filter ? (
+                                                    <FilterIcon />
+                                                ) : (
+                                                    <OnFilterIcon />
+                                                )}
+                                            </FilterBtn>
+                                        </InFoContainer>
+                                        <MatchMainItemBox>
+                                            <MatchImg
+                                                src={e.img}
+                                                alt="photoThumb"
+                                            />
+                                            <FavoriteBox>
+                                                <FavoriteTitle>
+                                                    Favorite
+                                                </FavoriteTitle>
+                                                <FavoriteList>
+                                                    {interestOptions
+                                                        .filter((_, idx) =>
+                                                            e.favorites.includes(
+                                                                idx + 1
+                                                            )
                                                         )
-                                                    })
-                                                }
-                                            </FavoriteList>
-                                        </FavoriteBox>
+                                                        .map((ele, idx) => {
+                                                            return (
+                                                                <li key={idx}>
+                                                                    {ele.value}
+                                                                </li>
+                                                            );
+                                                        })}
+                                                </FavoriteList>
+                                            </FavoriteBox>
 
-                                        <MatchBtnBox>
-                                            <Buttons
-                                                size="medium"
-                                                bgColor="itemColor"
-                                                fontColor="black"
-                                                outline
-                                                onClick={() => {
-                                                    userDislikeHandler(e.id)
-                                                }}
-                                            >
-                                                <FaHandshakeSlash color="white" size={36} />
-                                            </Buttons>
+                                            <MatchBtnBox>
+                                                <Buttons
+                                                    size="medium"
+                                                    bgColor="itemColor"
+                                                    fontColor="black"
+                                                    outline
+                                                    onClick={() => {
+                                                        userDislikeHandler(
+                                                            e.id
+                                                        );
+                                                    }}
+                                                >
+                                                    <FaHandshakeSlash
+                                                        color="white"
+                                                        size={36}
+                                                    />
+                                                </Buttons>
 
-                                            <Buttons
-                                                size="medium"
-                                                bgColor="itemColor"
-                                                fontColor="black"
-                                                outline
-                                                onClick={() => {
-                                                    userLikeHandler(e.id)
-                                                }}
-                                            >
-                                                <TbHeartHandshake color="white" size={40} />
-                                            </Buttons>
-                                        </MatchBtnBox>
-                                    </MatchMainItemBox>
-                                </div>
-                            )
-                        })
-
-                    }
+                                                <Buttons
+                                                    size="medium"
+                                                    bgColor="itemColor"
+                                                    fontColor="black"
+                                                    outline
+                                                    onClick={() => {
+                                                        userLikeHandler(e.id);
+                                                    }}
+                                                >
+                                                    <TbHeartHandshake
+                                                        color="white"
+                                                        size={40}
+                                                    />
+                                                </Buttons>
+                                            </MatchBtnBox>
+                                        </MatchMainItemBox>
+                                    </div>
+                                );
+                            })}
                 </MatchContentBox>
             </MatchContentWrap>
         </>
@@ -343,7 +395,6 @@ const OnFilterIcon = styled(BsBookmarkHeartFill)`
         animation: ${shakeAnimation} 0.6s;
     }
 `;
-
 
 const ChatListLinkIcon = styled(HiOutlineChatBubbleLeftRight)`
     font-size: 36px;
