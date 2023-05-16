@@ -5,10 +5,10 @@ const token = cookie.get("auth");
 
 const instance = axios.create({
     baseURL: `${process.env.REACT_APP_TEST_SERVER_URL}`,
-    headers: { Authorization: `Bearer ${token}` },
+    // headers: { Authorization: `Bearer ${token}` },
     
 });
-// instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 // Instance를 만들 때 설정의 default 값을 설정할 수 있다.
 /* const instance = axios.create({
     baseURL: 'https://api.example.com'
