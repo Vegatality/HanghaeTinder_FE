@@ -8,7 +8,9 @@ import { styled } from "styled-components";
 import { darken, lighten, linearGradient } from "polished";
 
 const animatedComponents = makeAnimated();
-const interestOptions = [
+
+// 서버에서 id(숫자)를 보내줌. 근데 인덱스가 아니라 데이터베이스 번호라서 -1 해서 인덱스번호로 찾아야 함.
+export const interestOptions = [
     { value: "workout", label: "Workout", color: "#00B8D9", isFixed: true },
     // { value: "game", label: "Game", color: "#0052CC", isDisabled: true },
     { value: "game", label: "Game", color: "#0052CC" },
