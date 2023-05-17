@@ -14,30 +14,19 @@ import Loading from "../components/Loading";
 function MatchingPage() {
     const [filter, setFilter] = useState(false);
     const queryClient = useQueryClient();
-    //TODO filter아이콘 색 구분으로 filter모드인지 구분하기
-    //TODO 전체유저목록 조회쿼리에 enabled 옵션에 !filter 반대로 좋아요 북마크 쿼리엔 그냥 filter
-    //TODO setFilter(!filter)
 
     //* 전체유저목록 조회
 
-    const {
-        data: userInfo,
-        isLoading: userIsLoading,
-        isError: userIsError,
-    } = useQuery("getUserInfo", usersInfo, {
+    const {data: userInfo,isLoading: userIsLoading,isError: userIsError,} = useQuery("getUserInfo", usersInfo, {
         enabled: filter === false,
         // enabled: !!filter,
         refetchOnWindowFocus: false,
         retry: true,
         // retryDelay: 1000,
     });
+
     //* 좋아요유저목록 조회
-    const {
-        data: FilterUser,
-        isLoading: FilterIsLoading,
-        isError: FilterIsError,
-        error,
-    } = useQuery("getFilterUserInfo", LikeUsers, {
+    const { data: FilterUser, isLoading: FilterIsLoading, isError: FilterIsError, error,} = useQuery("getFilterUserInfo", LikeUsers, {
         enabled: filter === true,
         // enabled: !filter,
         refetchOnWindowFocus: false,
