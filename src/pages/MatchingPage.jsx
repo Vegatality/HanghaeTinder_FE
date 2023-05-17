@@ -29,7 +29,7 @@ function MatchingPage() {
         // enabled: !!filter,
         refetchOnWindowFocus: false,
         retry: true,
-        retryDelay: 1000,
+        // retryDelay: 1000,
     });
     //* 좋아요유저목록 조회
     const {
@@ -42,13 +42,15 @@ function MatchingPage() {
         // enabled: !filter,
         refetchOnWindowFocus: false,
         retry: true,
-        retryDelay: 1000,
+        // retryDelay: 1000,
     });
 
     const userFilter = () => {
+        /* 필터모드를 바꾸는거 (전체 <-> 나를 좋아요) */
+        queryClient.removeQueries();
         setFilter(!filter);
-        queryClient.invalidateQueries("getUserInfo");
-        queryClient.invalidateQueries("getFilterUserInfo");
+
+        /* 조건문 달자 */
     };
     // //* 전체유저목록 조회 Mutation
     // const userInfoMutation = useMutation(usersInfo, {
@@ -60,8 +62,13 @@ function MatchingPage() {
     //* 싫어요 눌렀을 때 Mutation
     const userDislikeMutation = useMutation(clickdisLike, {
         onSuccess: () => {
-            queryClient.invalidateQueries("getUserInfo");
-            queryClient.invalidateQueries("getFilterUserInfo");
+            /* 전체유저 보기 모드 */
+            if (!filter) {
+                queryClient.invalidateQueries("getUserInfo");
+                // 내가 어떤 행동을 하던간에 그 틈에 나를 좋아요를 누른 사람이 있을 수 있음.
+            } else {
+                queryClient.invalidateQueries("getFilterUserInfo");
+            }
         },
     });
 
@@ -74,8 +81,13 @@ function MatchingPage() {
     // //* 좋아요 눌렀을 때 Mutation
     const likeMutation = useMutation(clickLike, {
         onSuccess: () => {
-            queryClient.invalidateQueries("getUserInfo");
-            queryClient.invalidateQueries("getFilterUserInfo");
+            /* 전체유저 보기 모드 */
+            if (!filter) {
+                queryClient.invalidateQueries("getUserInfo");
+                /* 필터 모드 */
+            } else {
+                queryClient.invalidateQueries("getFilterUserInfo");
+            }
         },
     });
 

@@ -43,7 +43,7 @@ function SignInPage() {
         //     //mutationFunction인 signIndb가 실행되기 전에 실행. mutationFunc가 받을 동일한 변수가 전달됨.
         //     // console.log("useMutation의 onMutate, 서버에 요청 시작합니다!");
         // },
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             /* 입력 초기화 */
             // /* 토큰 해체 및 쿠키에 저장. */
             /* 그냥 Bearer 떼고 넣자! */
@@ -76,7 +76,7 @@ function SignInPage() {
             deleteInputs();
 
             // 페이지 이동
-            moveToMatch();
+            await moveToMatch();
         },
         onError: (error) => {
             console.log(error);

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 function Loading() {
-    const [loadingText, setLoadingText] = useState("◼")
+    const [loadingText, setLoadingText] = useState("◼");
     let intervalTime = null;
-    useEffect(()=>{
-        intervalTime = setInterval(() => {
-            setLoadingText((prev)=>prev === "◼◼◼◼◼"? "◼" : prev + "◼")
-        }, 150);
+    useEffect(() => {
+        intervalTime = setInterval(
+            () =>
+                setLoadingText((prev) => (prev === "◼◼◼◼◼" ? "◼" : prev + "◼")),
+            150
+        );
 
-        return ()=> {
-            clearInterval(intervalTime)
-        }
-    })
-  return (
-    <span>Loading{loadingText}</span>
-  )
+        return () => {
+            clearInterval(intervalTime);
+        };
+    });
+    return <span>Loading{loadingText}</span>;
 }
 
-export default Loading
+export default Loading;

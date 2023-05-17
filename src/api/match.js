@@ -1,9 +1,24 @@
-import axios from "./axiosToken";
+import { cookie } from "../util/cookie";
+// import axios from "./axiosToken";
+import axios from "axios";
+
+/* troubleshooting */
+// axios 자체는 instance를 사용 가능.
+// but react-query는 instance를 사용 불가능.
+
+const getCookie = cookie.get("auth");
+const headers = {
+    authorization: `Bearer ${getCookie}`,
+};
 
 //* 전체유저목록 조회
 const usersInfo = async () => {
     return await axios
-        .get(`/api/users`, {})
+        .get(`${process.env.REACT_APP_TEST_SERVER_URL}/api/users`, {
+            headers: {
+                authorization: `Bearer ${getCookie}`,
+            },
+        })
         .then((response) => {
             // console.log(response.data)
             return response.data;
@@ -40,7 +55,13 @@ const usersInfo = async () => {
 
 const clickLike = async (id) => {
     try {
-        const response = await axios.post(`/api/users/like/${id}`);
+        const response = await axios.post(
+            `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/like/${id}`,
+            {},
+            {
+                headers,
+            }
+        );
         return response.data;
     } catch (error) {
         throw new error(error);
@@ -51,7 +72,13 @@ const clickLike = async (id) => {
 
 const clickdisLike = async (id) => {
     try {
-        const response = await axios.post(`/api/users/dislike/${id}`);
+        const response = await axios.post(
+            `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/dislike/${id}`,
+            {},
+            {
+                headers,
+            }
+        );
         return response.data;
     } catch (error) {
         throw new error(error);
@@ -62,7 +89,12 @@ const clickdisLike = async (id) => {
 
 const LikeUsers = async () => {
     try {
-        const response = await axios.get(`api/users/like`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/like`,
+            {
+                headers,
+            }
+        );
         console.log(response);
         return response.data;
     } catch (error) {
