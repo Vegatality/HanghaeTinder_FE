@@ -1,9 +1,8 @@
-import { async } from "q";
 import axios from "./axiosToken";
 
 //* 전체유저목록 조회
 const usersInfo = async () => {
-    return axios
+    return await axios
         .get(`/api/users`, {})
         .then((response) => {
             // console.log(response.data)
