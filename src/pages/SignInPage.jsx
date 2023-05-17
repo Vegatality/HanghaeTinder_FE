@@ -11,6 +11,7 @@ import { signInDb } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { SET_TOKEN } from "../redux/modules/authSlice";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignInPage() {
     const [inputs, setInputs, deleteInputs, validateInputs] = useInput({
