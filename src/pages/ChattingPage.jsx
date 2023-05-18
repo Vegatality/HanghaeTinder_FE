@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { BsSuitHeartFill, BsSuitHeart } from "react-icons/bs";
@@ -555,6 +555,24 @@ const SendBtnWrap = styled.div`
         transition: all 0.3s;
         animation: ${shakeAnimation} 0.6s;
     }
+`
+
+const YourProfileImgWrap = styled.div`
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    background-color: rgba(254, 86, 101, 0.2);
+`
+
+const YourProfileImg = styled.div`
+    width: 100%;
+    height: 100%;
+    background-image: url("../image/InstaTinder.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 `
 
 const SendBtn = styled(BiSend)`

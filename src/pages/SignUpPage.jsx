@@ -23,6 +23,7 @@ function SignUpPage({ theme }) {
         // favorites: [],
     });
     const [pwCheck, setPwCheck] = useState("");
+    const [isMessage, setIsMessage] = useState(false);
 
     /* bornIn */
     const [bornIn, setBornIn] = useState({
@@ -153,9 +154,19 @@ function SignUpPage({ theme }) {
             console.log("data >>>", data);
             deleteInput()
             navigation("/signin");
+            setIsMessage(true);
+            toast.success(`회원가입 성공! 환영합니다 ...님`, {
+                position: toast.POSITION.TOP_CENTER,
+                toastId: "empty-comment-toast",
+            });
         },
         onError: (error) => {
             console.log("error >>>", error);
+            setIsMessage(true);
+            toast.error(`회원가입 실패!`, {
+                position: toast.POSITION.TOP_CENTER,
+                toastId: "empty-comment-toast",
+            });
         },
     });
 
@@ -270,6 +281,7 @@ function SignUpPage({ theme }) {
     return (
         <Wrapper>
             <Canvas>
+            {isMessage && <ToastContainer />}
                 <Section1>
                     <AbsoluteLogo onClick={moveToBack} />
                     <DescContainer>
