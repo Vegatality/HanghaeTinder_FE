@@ -6,18 +6,17 @@ import axios from "./axiosToken";
 // axios 자체는 instance를 사용 가능.
 // but react-query는 instance를 사용 불가능(왜인지는 모르겠지만 못 읽음. 혹은 비동기적으로 되는 듯. 그 해결방법을 아직 찾는 중).
 
-const getCookie = cookie.get("auth");
-const headers = {
-    authorization: `Bearer ${getCookie}`,
-};
 
-//* 전체유저목록 조회
+
+//* 전체유저목록 조회(cookie 는 await 가 붙는다.)
 const usersInfo = async () => {
+    const getCookie = await cookie.get("auth");
+    const headers = {
+        authorization: `Bearer ${getCookie}`,
+    };
     return await axios
         .get(`${process.env.REACT_APP_TEST_SERVER_URL}/api/users`, {
-            headers: {
-                authorization: `Bearer ${getCookie}`,
-            },
+            headers
         })
         .then((response) => {
             // console.log(response.data)
@@ -55,6 +54,10 @@ const usersInfo = async () => {
 
 const clickLike = async (id) => {
     try {
+        const getCookie = await cookie.get("auth");
+        const headers = {
+            authorization: `Bearer ${getCookie}`,
+        };
         const response = await axios.post(
             `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/like/${id}`,
             {},
@@ -72,6 +75,10 @@ const clickLike = async (id) => {
 
 const clickdisLike = async (id) => {
     try {
+        const getCookie = await cookie.get("auth");
+        const headers = {
+            authorization: `Bearer ${getCookie}`,
+        };
         const response = await axios.post(
             `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/dislike/${id}`,
             {},
@@ -89,6 +96,10 @@ const clickdisLike = async (id) => {
 
 const LikeUsers = async () => {
     try {
+        const getCookie = await cookie.get("auth");
+        const headers = {
+            authorization: `Bearer ${getCookie}`,
+        };
         const response = await axios.get(
             `${process.env.REACT_APP_TEST_SERVER_URL}/api/users/like`,
             {

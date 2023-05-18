@@ -216,7 +216,7 @@ function MatchingPage() {
                             .map((e, i) => {
                                 return (
                                     <div key={i}>
-                                        <Link to={"/"}>
+                                        <Link to={"/"} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                                             <MatchLogoImage
                                                 src="../image/MainPageLogo.svg"
                                                 alt="photoThumb"
@@ -418,6 +418,8 @@ const MatchMainItemBox = styled.div`
 
 const MatchImg = styled.img`
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     height: 400px;
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

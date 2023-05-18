@@ -162,14 +162,25 @@ function ChattingPage() {
                 const response = JSON.parse(data.body)
                 // console.log("response.data.chatMessages >>> ", response.data.chatMessages)
                 // id는 안써서 상관없음.
+                
+                /* from genius 배: 맨 처음에는 우리가 입력한 메시지가 없으니까 그걸로 구별하면 된다 */
+                /* 아! scroll 했을 때도 배열로 받아오는구나!*/
+                if(response?.data.chatMessages && !message){
+                    const messageHistory = [...chatMessages, ...response.data.chatMessages]
+                    setChatMessages(messageHistory)
+                }
 
-
-                if (response.data.hasOwnProperty('chatMessages')) {
+                if (response?.data.hasOwnProperty('chatMessages')) {
                     setPage((prevNum) => prevNum + 1);
-                    setChatMessages((prevMsg) => [...prevMsg, ...response.data.chatMessages]);
+                    /* checkPoint */
+                    /* data.body가 object로 오는 경우 : 내가 보낸 메시지를 서버가 즉각적으로 response 하는 경우  */
+                    const messageHistory = [...chatMessages, data.body]
+                    setChatMessages(messageHistory);
+
                     setTotalPage(response.data.totalPages)
                 }
-                if ((response.data.hasOwnProperty('chatMessages') && response.data.page === 0) || !response.data.hasOwnProperty('chatmessages')) {
+                /* 이 채팅방에 처음으로 진입했을 경우 || 내가 메시지를 보낸 경우  => 이 때 바닥으로 꽂고싶다. */
+                if ((response?.data.hasOwnProperty('chatMessages') && response?.data.page === 0) || !response.data.hasOwnProperty('chatmessages')) {
                     focusRef.current.scrollIntoView({ behavior: 'smooth' })
                 }
 
@@ -193,6 +204,7 @@ function ChattingPage() {
         );
     };
 
+    console.log("chatMsg >>>>>", chatMessages)
 
     const publish = async () => {
         if (!stompClient.current.connected) {
@@ -269,6 +281,8 @@ function ChattingPage() {
         setToggleLoading((state)=> !state);
     }, [chatMessages])
 
+
+    /* Scroll */
     useEffect(() => {
         console.log("inview, totalpage >>>" ,inView, totalPage);
         if (inView && (page + 1) < totalPage) {

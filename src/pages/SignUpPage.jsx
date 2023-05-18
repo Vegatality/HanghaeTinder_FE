@@ -155,7 +155,7 @@ function SignUpPage({ theme }) {
             deleteInput()
             navigation("/signin");
             setIsMessage(true);
-            toast.success(`회원가입 성공! 환영합니다 ...님`, {
+            toast.success(`회원가입 성공!`, {
                 position: toast.POSITION.TOP_CENTER,
                 toastId: "empty-comment-toast",
             });

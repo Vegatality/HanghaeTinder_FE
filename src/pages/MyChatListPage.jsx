@@ -247,7 +247,7 @@ function MyChatListPage() {
         //     stompClient.disconnect();
         // };
 
-        return () => stompClient.disconnect()
+        return () => stompClient?.disconnect()
     }, []);
 
     const navigate = useNavigate();
