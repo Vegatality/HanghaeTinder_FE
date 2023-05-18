@@ -6,8 +6,12 @@ import { styled } from "styled-components";
 import { cookie } from "../util/cookie";
 import Buttons from "../components/assets/Button";
 import jwtDecode from "jwt-decode";
+import Loading from "../components/Loading"
+import {getTimeDifference} from "../util/getTimeDifference"
+import { useNavigate } from "react-router-dom";
 
 function MyChatListPage() {
+    const [isLoading, setIsLoading] = useState(true)
     const outletContext = useOutletContext();
     console.log("outletContext >>>", outletContext);
     const isConnected = useRef("");
@@ -19,6 +23,7 @@ function MyChatListPage() {
     const checkCookie = cookie.get("auth");
     const decodedToken = jwtDecode(checkCookie);
     const { sub, exp } = decodedToken;
+    
 
     /* checkPoint */
     const connect = () => {
@@ -43,14 +48,7 @@ function MyChatListPage() {
 
             heartbeatOutgoing: 4000,
 
-            onConnect: () => {
-                console.log("Connected to the broker. Initiate subscribing.");
-                isConnected.current = true;
-                subscribe();
-                publish();
-
-                // publish()
-            },
+            // 검증 부분
             webSocketFactory: () => {
                 const socket = new SockJS(
                     "http://222.102.175.141:8080/ws-stomp"
@@ -64,6 +62,17 @@ function MyChatListPage() {
                 };
                 return socket;
             },
+
+
+            // 검증이 돼서 Room을 열어주는 서버랑 연결이 되면
+            onConnect: () => {
+                console.log("Connected to the broker. Initiate subscribing.");
+                isConnected.current = true;
+                subscribe();
+                publish(sub);
+
+            },
+
             onStompError: (frame) => {
                 console.log(frame);
                 console.log(
@@ -94,6 +103,7 @@ function MyChatListPage() {
 
     const disconnect = () => {
         stompClient.current.deactivate();
+        isConnected.current = false
         // stompClient.current.disconnect()
         // stompClient.current.unsubscribe()
     };
@@ -106,6 +116,9 @@ function MyChatListPage() {
                     " 구독이 잘 되었습니다. >>>",
                     JSON.parse(data.body)
                 );
+                const response = JSON.parse(data.body)
+                console.log(response.data.chatRooms);
+                setChatMessages(response.data.chatRooms)
             }
             // ({ body }) => {
             //     setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
@@ -113,25 +126,48 @@ function MyChatListPage() {
         );
     };
 
-    const publish = (message) => {
+    const publish = async(userId) => {
         if (!stompClient.current.connected) {
             return;
         }
 
-        stompClient.current.publish({
+        await stompClient.current.publish({
             destination: "/pub/chat/message",
             // body: JSON.stringify({
             //     roomSeq: "63b8fe74-6adf-4bb6-94f5-b7b612dcc8b2",
             //     message: "test message",
             // }),
             /* 메시지 부분 수정해야 함. */
-            body: JSON.stringify({ type: "ROOM", roomId: sub }),
+            body: JSON.stringify({ type: "ROOM", roomId: userId }),
             headers: { authorization: `Bearer ${checkCookie}` },
+            //
         });
+
+        setIsLoading(false)
 
         /* my message initiate */
         setMessage("");
     };
+    // const publish = (message) => {
+    //     if (!stompClient.current.connected) {
+    //         return;
+    //     }
+
+    //     stompClient.current.publish({
+    //         destination: "/pub/chat/message",
+    //         // body: JSON.stringify({
+    //         //     roomSeq: "63b8fe74-6adf-4bb6-94f5-b7b612dcc8b2",
+    //         //     message: "test message",
+    //         // }),
+    //         /* 메시지 부분 수정해야 함. */
+    //         body: JSON.stringify({ type: "ROOM", roomId: sub }),
+    //         headers: { authorization: `Bearer ${checkCookie}` },
+    //         //
+    //     });
+
+    //     /* my message initiate */
+    //     setMessage("");
+    // };
 
     /* original */
 
@@ -152,7 +188,7 @@ function MyChatListPage() {
     //             //     Authorization: `Bearer ${checkCookie}`,
     //             // },
     //         },
-    //         async (data) => {
+    //         (data) => {
     //             console.log("여기 왜 콘솔 안찍힘?");
     //             console.log("cennect 콜백부분");
     //             // console.log("cennect message >>>", JSON.parse(data));
@@ -160,8 +196,9 @@ function MyChatListPage() {
     //             console.log("cennect message >>>", data);
     //             console.log("cennect message >>>", data.body);
     //             console.log("userID >>>", sub);
-    //             await stompClient.subscribe(
+    //             stompClient.subscribe(
     //                 `/sub/chat/rooms/${sub}`,
+    //                 // MESSAGE 라는 것은 subscribe 부분에서 주는 것.
     //                 (message) => {
     //                     // const parsedMessage = JSON.parse(message.body);
     //                     // const normalMessage = JSON.parse(message);
@@ -175,10 +212,10 @@ function MyChatListPage() {
     //             // 연결 성공 시 동작할 로직 작성
     //             // stompClient.current._checkConnection(); // _checkConnection 호출
 
-    //             await stompClient.send(
-    //                 "/pub/chat/message",
-    //                 {},
-    //                 JSON.stringify({ type: "ROOM", roomId: sub })
+    //             stompClient.send(
+    //                 "/pub/chat/message", // endPoint
+    //                 {}, // headers
+    //                 JSON.stringify({ type: "ROOM", roomId: sub }) // body를 실어서 보내야됨
     //             );
     //         },
     //         (error) => {
@@ -193,7 +230,7 @@ function MyChatListPage() {
 
     // useEffect(() => {
 
-    //     // 컴포넌트 언마운트 시 연결 해제
+    //     
     //     // return () => {
     //     //     stompClient.disconnect();
     //     // };
@@ -201,11 +238,31 @@ function MyChatListPage() {
     //     // return () => disconnect();
     // }, []);
 
+    const navigate = useNavigate();
+    const moveToChat = (roomId) => {
+        navigate("/chatpage", {
+            state : {
+                roomId
+            }
+        })
+    }
+
     useEffect(() => {
         connect();
 
-        return () => disconnect();
+        // 컴포넌트 언마운트 시 연결 해제 => 굳이 채팅방 넘어갈 때 구독 해제해야 하는지 생각해보자.
+        // 페이지 넘어가도 소켓을 disconnect를 안했으니까 유지되고 있는 상태!
+        // return () => disconnect();
     }, []);
+
+    if(isLoading){
+        return (
+            <div>
+                <Loading />
+            </div>
+        )
+    }
+
 
     return (
         <>
@@ -219,20 +276,23 @@ function MyChatListPage() {
                     </Link>
                     <ChatListTitle>Chats</ChatListTitle>
                     <ChatList>
-                        <Chats>
-                            <ChatImg></ChatImg>
-                            <ChatInpo>최신 메세지 or 페이버릿</ChatInpo>
-                        </Chats>
-
-                        <Chats>
-                            <ChatImg></ChatImg>
-                            <ChatInpo>최신 메세지 or 페이버릿</ChatInpo>
-                        </Chats>
-
-                        <Chats>
-                            <ChatImg></ChatImg>
-                            <ChatInpo>최신 메세지 or 페이버릿</ChatInpo>
-                        </Chats>
+                        {
+                            chatMessages.map((ele) => {
+                                console.log(ele)
+                                return (
+                                    <Chats key={ele.id} onClick={()=>moveToChat(ele.roomId)}>
+                                        <ChatImg></ChatImg>
+                                        <ChatInpoWrap>
+                                            <div>
+                                                <ChatInpoRoomName>{ele.name}</ChatInpoRoomName>
+                                                <ChatInpoRoomLastMsg>{ele.lastMsg}</ChatInpoRoomLastMsg>
+                                            </div>
+                                            <ChatInpoLastDate>{getTimeDifference(ele.lastMsgDate)}</ChatInpoLastDate>
+                                        </ChatInpoWrap>
+                                    </Chats>
+                                )
+                            })
+                        }
                         {/* <input
                             type="text"
                             placeholder="message test"
@@ -281,26 +341,34 @@ const ChatListTitle = styled.h2`
 
 const ChatList = styled.ul`
     width: 100%;
-    height: 100px;
+    height: 730px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+    }
 `;
 
 const Chats = styled.li`
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 15px;
     margin-top: 10px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
     box-sizing: border-box;
+    cursor: pointer;
+    gap: 15px;
     &:hover {
         transform: scale(1.02);
         transition: all 0.3s;
     }
 `;
+
+
 
 const ChatImg = styled.div`
     width: 80px;
@@ -311,13 +379,32 @@ const ChatImg = styled.div`
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url("../image/MainPageLogo.svg");
+    background-image: url("../image/InstaTinder.png");
+    background-color: rgba(254, 86, 101, 0.2);
     cursor: pointer;
 `;
 
-const ChatInpo = styled.p`
+const ChatInpoWrap = styled.div`
     width: 80%;
-    font-size: 24px;
-    text-align: end;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+`
+
+const ChatInpoRoomName = styled.p`
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 10px;
 `;
+
+const ChatInpoRoomLastMsg = styled.p`
+    font-size: 12px;
+    font-weight: 400;
+`;
+
+const ChatInpoLastDate = styled.p`
+    font-size: 12px;
+    font-weight: 900;
+`
 export default MyChatListPage;
