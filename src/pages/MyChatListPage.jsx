@@ -239,10 +239,11 @@ function MyChatListPage() {
     // }, []);
 
     const navigate = useNavigate();
-    const moveToChat = (roomId) => {
+    const moveToChat = (roomId, roomName) => {
         navigate("/chatpage", {
             state : {
-                roomId
+                roomId,
+                roomName
             }
         })
     }
@@ -280,7 +281,7 @@ function MyChatListPage() {
                             chatMessages.map((ele) => {
                                 console.log(ele)
                                 return (
-                                    <Chats key={ele.id} onClick={()=>moveToChat(ele.roomId)}>
+                                    <Chats key={ele.id} onClick={()=>moveToChat(ele.roomId, ele.name)}>
                                         <ChatImg></ChatImg>
                                         <ChatInpoWrap>
                                             <div>
