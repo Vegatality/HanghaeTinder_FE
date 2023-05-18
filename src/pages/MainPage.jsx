@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import Buttons from "../components/assets/Button";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function MainPage() {
     const navigate = useNavigate();
@@ -42,9 +42,11 @@ function MainPage() {
                             마음에 드는 친구와 대화해 보세요!
                         </WelcomeText>
                     </div>
-                    <Buttons size="large" bgColor="itemColor">
-                        Matching Start
-                    </Buttons>
+                    <Link to={'/match'}>
+                        <Buttons size="large" bgColor="itemColor">
+                            Matching Start
+                        </Buttons>
+                    </Link>
                 </Canvas>
             </Wrapper>
         </>

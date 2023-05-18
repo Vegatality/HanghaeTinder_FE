@@ -351,7 +351,7 @@ const FilterBtn = styled.button`
 const Nickname = styled.p`
     font-size: 56px;
     font-weight: 400;
-    width: 400px;
+    padding: 20px;
     position: absolute;
     left: 15px;
     bottom: 225px;
