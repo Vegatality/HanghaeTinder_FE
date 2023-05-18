@@ -106,6 +106,7 @@ function SignInPage() {
                         value={inputs.password}
                         onChange={setInputs}
                         placeholder="Input Password"
+                        type="password"
                     />
                     <Buttons
                         size="medium"
