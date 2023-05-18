@@ -78,7 +78,7 @@ const WelcomeText = styled.div`
 const Wrapper = styled.div`
     width: 100vw;
     height: 100vh;
-    background: url("../image/backImage.webp") no-repeat;
+    background: url("../image/MainBackImg.png") no-repeat;
     background-size: cover;
     /* filter: brightness(80%); */
 `;

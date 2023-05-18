@@ -1,10 +1,10 @@
 import { cookie } from "../util/cookie";
-// import axios from "./axiosToken";
-import axios from "axios";
+import axios from "./axiosToken";
+// import axios from "axios";
 
 /* troubleshooting */
 // axios 자체는 instance를 사용 가능.
-// but react-query는 instance를 사용 불가능.
+// but react-query는 instance를 사용 불가능(왜인지는 모르겠지만 못 읽음. 혹은 비동기적으로 되는 듯. 그 해결방법을 아직 찾는 중).
 
 const getCookie = cookie.get("auth");
 const headers = {
