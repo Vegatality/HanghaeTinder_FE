@@ -10,21 +10,33 @@ import { cookie } from "../util/cookie";
 import jwtDecode from "jwt-decode";
 import Loading from "../components/Loading"
 import { debounce } from "lodash";
+import { InView, useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
 
 
 function ChattingPage() {
     const [isLoading, setIsLoading] = useState(true)
     const isConnected = useRef("");
     const stompClient = useRef(null);
+
+    /* 전체 페이지 기록 */
+    const [totalPage, setTotalPage] = useState(0);
     /* 내가 한 번 눌러서 보내는 메시지 */
-    const [message, setMessage] = useState("initiate");
+    const [message, setMessage] = useState("");
+    const [toggleLoading, setToggleLoading] = useState(true);
 
     /* 내가 이전에 받은 메시지 배열 + 내가 받아오는 메시지 배열(*내가 금방 보낸 것도 다시 받아옴) */
     const [chatMessages, setChatMessages] = useState([]);
     const [page, setPage] = useState(0);
     const [type, setType] = useState("ENTER")
-
     const [like, setLike] = useState(true)
+    const [ref, inView] = useInView();
+
+    // const prevSocket = useSelector((store)=> store.socket.socket)
+    // console.log("prevSocket >>> ", prevSocket)
+    /* 처음 포커스 잡아주는 ref */
+    const focusRef = useRef()
+
 
     const unLike = () => {
         setLike(!like)
@@ -35,7 +47,10 @@ function ChattingPage() {
     const decodedToken = jwtDecode(checkCookie);
     const { sub: userId, exp } = decodedToken;
     /* 이 roomId 를 새로고침 했을 때도 과연 기억하는가? state에 넣어둬야 하는가? */
-    const { roomId } = location.state;
+    const { roomId, roomName } = location.state;
+
+
+
 
 
     const connect = () => {
@@ -77,18 +92,12 @@ function ChattingPage() {
 
 
             // 검증이 돼서 Room을 열어주는 서버랑 연결이 되면
-            onConnect: async() => {
+            onConnect: async () => {
                 console.log("Connected to the broker. Initiate subscribing.");
                 isConnected.current = true;
                 await subscribe();
-                await debounce(
-                    () => {
-                        publish(); 
-                    }, 100,
-                    {leading: false}
-                );
-                await testPublish();
-
+                await publish();
+                // await textPublish();
             },
 
             onStompError: (frame) => {
@@ -119,6 +128,7 @@ function ChattingPage() {
         // stompClient.current.connect({})
     };
 
+
     const disconnect = () => {
         /* stompClient.current.deactivate()와 stompClient.current.disconnect()는 STOMP 프로토콜을 사용하여 서버와의 연결을 해제하는 데 사용되는 메서드입니다. 
         그러나 두 메서드는 약간 다른 동작을 수행합니다.  stompClient.current.deactivate(): 이 메서드는 현재 STOMP 클라이언트의 연결을 비활성화합니다. 
@@ -129,13 +139,19 @@ function ChattingPage() {
         새로운 연결을 설정하려면 클라이언트는 다시 connect() 메서드를 호출해야 합니다. 연결을 다시 활성화할 필요가 없으며, 새로운 연결을 설정해야하는 경우에 주로 사용됩니다.
         요약하면, deactivate() 메서드는 연결을 비활성화하고 재활성화할 수 있지만, disconnect() 메서드는 연결을 완전히 종료하고 새로운 연결을 설정해야합니다. 
         어떤 메서드를 선택할지는 상황과 사용자의 요구에 따라 다를 수 있습니다. */
-        stompClient.current.deactivate();
-        // stompClient.current.disconnect()
+        // stompClient.current.deactivate();
+        stompClient.current.disconnect()
         /* unsubscribe에 destination 주소를 적어주면 된다. */
         // stompClient.current.unsubscribe("/destination")
     };
-    const subscribe = () => {
-        stompClient.current.subscribe(
+
+    // const socket = new SockJS(
+    //     "http://222.102.175.141:8080/ws-stomp"
+    // );
+    // stompClient.current = Stomp.over(socket);
+
+    const subscribe = async () => {
+        await stompClient.current.subscribe(
             `/sub/chat/room/${roomId}`,
 
             (data) => {
@@ -144,11 +160,31 @@ function ChattingPage() {
                     JSON.parse(data.body)
                 );
                 const response = JSON.parse(data.body)
+                // console.log("response.data.chatMessages >>> ", response.data.chatMessages)
                 // id는 안써서 상관없음.
-                if(response.data.chatMessages){
-                    // prevMsg는 이전 메시지 배열, response...는 실시간으로 새로 들어오는 메시지 배열
-                    setChatMessages((prevMsg)=>[...prevMsg, ...response.data.chatMessages])
-                } 
+
+
+                if (response.data.hasOwnProperty('chatMessages')) {
+                    setPage((prevNum) => prevNum + 1);
+                    setChatMessages((prevMsg) => [...prevMsg, ...response.data.chatMessages]);
+                    setTotalPage(response.data.totalPages)
+                }
+                if ((response.data.hasOwnProperty('chatMessages') && response.data.page === 0) || !response.data.hasOwnProperty('chatmessages')) {
+                    focusRef.current.scrollIntoView({ behavior: 'smooth' })
+                }
+
+                // if( type==="TALK"  ) {
+                //     focusRef.current.scrollIntoView({ behavior: 'smooth'})
+                // }
+
+                // if (response.data.chatMessages && isLoading === false) {
+                //     // prevMsg는 이전 메시지 배열, response...는 실시간으로 새로 들어오는 메시지 배열
+                //     console.log("상대방 아이디 >>>", response.data.chatMessages.find((ele) => ele.sender !== userId).sender)
+                //     console.log("내 아이디 >>>", response.data.chatMessages.find((ele) => ele.sender === userId).sender)
+                //     setChatMessages((prevMsg) => [...prevMsg, ...response.data.chatMessages])
+                // } else {
+                //     return
+                // }
 
             }
             // ({ body }) => {
@@ -157,47 +193,14 @@ function ChattingPage() {
         );
     };
 
+
     const publish = async () => {
-        let data;
         if (!stompClient.current.connected) {
             return;
         }
-        
-        if (type === "ENTER") {
-            data = {
-                type,
-                roomId,
-                page
-            }
-        } else if (type === "TALK"){
-            data = {
-                type,
-                roomId,
-                userId,
-                message
-            }
-        }
-
-
-        await stompClient.current.publish({
-            destination: "/pub/chat/message",
-            // body: JSON.stringify({
-            //     roomSeq: "63b8fe74-6adf-4bb6-94f5-b7b612dcc8b2",
-            //     message: "test message",
-            // }),
-            /* 위에 닿았을 때 페이지 증가시키는 로직 짜야 함. */
-            body: JSON.stringify(data),
-            headers: { authorization: `Bearer ${checkCookie}` },
-            //
-        });
-
-        setIsLoading(false)
-
-        /* my message initiate */
-        setMessage("");
-    };
-
-    const testPublish = async() => {
+        // if (!stompClient.current.connected) {
+        //     return;
+        // }
         await stompClient.current.publish({
             destination: "/pub/chat/message",
             // body: JSON.stringify({
@@ -206,29 +209,88 @@ function ChattingPage() {
             // }),
             /* 위에 닿았을 때 페이지 증가시키는 로직 짜야 함. */
             body: JSON.stringify({
-                type: "TALK",
+                type: "ENTER",
                 roomId,
-                userId,
-                message: "Test Success"
+                page
             }),
-            headers: { authorization: `Bearer ${checkCookie}` },
+            headers: { authorization: `Bearer ${checkCookie}` }
+
             //
         });
-    }
 
+        setIsLoading(false)
+
+        /* my message initiate */
+        // setMessage("");
+    };
+
+
+
+
+    const textPublish = async () => {
+        if(message !== ""){
+            await stompClient.current.publish({
+                destination: "/pub/chat/message",
+                // body: JSON.stringify({
+                //     roomSeq: "63b8fe74-6adf-4bb6-94f5-b7b612dcc8b2",
+                //     message: "test message",
+                // }),
+                /* 위에 닿았을 때 페이지 증가시키는 로직 짜야 함. */
+                body: JSON.stringify({
+                    type: "TALK",
+                    roomId,
+                    userId,
+                    message
+                }),
+                headers: { authorization: `Bearer ${checkCookie}` },
+                //
+            });
+            setMessage("")
+        }
+        
+    }
 
     
 
 
+
+    // useEffect(() => {
+    //     testConnection();
+
+
+    //     // return () => {
+    //     //     stompClient.disconnect();
+    //     // };
+
+    //     return () => stompClient.disconnect()
+    // }, []);
+
+    useEffect(()=> {
+        setToggleLoading((state)=> !state);
+    }, [chatMessages])
+
     useEffect(() => {
+        console.log("inview, totalpage >>>" ,inView, totalPage);
+        if (inView && (page + 1) < totalPage) {
+            publish();
+        }
+    }, [inView,chatMessages]);
+    // }, [fetch, hasNextPage, inView]);
+
+    useEffect(() => {
+
         connect();
+        // subscribe()
+        // publish()
+        // focusRef.current.focus()
+
 
         // 컴포넌트 언마운트 시 연결 해제 => 굳이 채팅방 넘어갈 때 구독 해제해야 하는지 생각해보자.
         // 페이지 넘어가도 소켓을 disconnect를 안했으니까 유지되고 있는 상태!
         // return () => disconnect();
     }, []);
 
-    if(isLoading){
+    if (isLoading) {
         return (
             <div>
                 <Loading />
@@ -258,14 +320,31 @@ function ChattingPage() {
                     </ChatProfileImgWrap>
 
                     <ChatProfiletitleWrap>
-                        <ChatProfiletitle>상대방 프로필</ChatProfiletitle>
+                        <ChatProfiletitle>{roomName}</ChatProfiletitle>
                         {like ? <ChatHeartIcon onClick={unLike} /> : <ChatUnHeartIcon onClick={unLike} />}
                     </ChatProfiletitleWrap>
                 </ChatProfileWrap>
 
-                <ChatContentWrap>
+                <ChatContentWrap inView={InView}>
+                    <div ref={ref}></div>
+                    {
+                        chatMessages.slice().reverse().map((data, idx) =>
+                            data.sender === userId ?
+                                <MyChatWrap key={idx}>
+                                    <WrittenTime>{data.createdAt}</WrittenTime><MyChat>{data.message}</MyChat>
+                                </MyChatWrap> :
+                                <YourChatWrap key={idx}>
+                                    <YourProfileImgWrap>
+                                        <YourProfileImg />
+                                    </YourProfileImgWrap>
+                                    <YourChat>{data.message}</YourChat><WrittenTime>{data.createdAt}</WrittenTime>
+                                </YourChatWrap>
 
-                    <YourChatWrap>
+                        )
+                    }
+
+
+                    {/* <YourChatWrap>
                         <YourProfileImgWrap>
                             <YourProfileImg />
                         </YourProfileImgWrap>
@@ -274,12 +353,12 @@ function ChattingPage() {
 
                     <MyChatWrap>
                         <WrittenTime>작성시간</WrittenTime><MyChat>사용자 채팅 내용</MyChat>
-                    </MyChatWrap>
-                    
+                    </MyChatWrap> */}
+                    <div style={{ height: "2px" }} ref={focusRef} />
                 </ChatContentWrap>
-                <ChatInput name="" id="" cols="30" rows="10" />
+                <ChatInput value={message} onChange={(e) => setMessage(e.target.value)} cols="30" rows="10" />
                 <SendBtnWrap>
-                    <SendBtn />
+                    <SendBtn onClick={textPublish}/>
                 </SendBtnWrap>
             </ChatContentBox>
         </ChatRoomWrap>
@@ -405,6 +484,7 @@ const ChatContentWrap = styled.div`
         display: none;
     }
     margin-bottom: 10px;
+    position: relative;
 `
 
 const YourChatWrap = styled.div`
@@ -506,4 +586,5 @@ const SendBtn = styled(BiSend)`
     color: white;
     font-size: 24px;
 `
+
 export default ChattingPage;

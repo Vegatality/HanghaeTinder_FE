@@ -9,6 +9,8 @@ import { useInput } from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 import { signUpDb } from "../api/auth";
 import { useMutation } from "react-query";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignUpPage({ theme }) {
     /* input */
@@ -331,7 +333,10 @@ function SignUpPage({ theme }) {
                                 bgColor={
                                     checkOut === "MALE" ? "itemColor" : "white"
                                 }
-                                fontColor="borderColor"
+                                fontColor={
+                                    checkOut === "MALE" ? "white" : "borderColor"
+                                }
+                                // fontColor="borderColor"
                                 outline
                                 name="gender"
                                 value="MALE"
@@ -346,7 +351,12 @@ function SignUpPage({ theme }) {
                                         ? "itemColor"
                                         : "white"
                                 }
-                                fontColor="borderColor"
+                                fontColor={
+                                    checkOut === "FEMALE"
+                                        ? "white"
+                                        : "borderColor"
+                                }
+                                // fontColor="borderColor"
                                 outline
                                 name="gender"
                                 value="FEMALE"
@@ -404,6 +414,7 @@ function SignUpPage({ theme }) {
                                     name="password"
                                     value={input.password}
                                     onChange={setInput}
+                                    type="password"
                                 />
                             </div>
                             {!validation("password") && (
@@ -429,6 +440,7 @@ function SignUpPage({ theme }) {
                                     placeholder="Password check"
                                     value={pwCheck}
                                     onChange={(e) => setPwCheck(e.target.value)}
+                                    type="password"
                                 />
                             </div>
                             {pwCheck !== input.password ? (
@@ -618,7 +630,6 @@ const PhotoBox = styled.div`
     border: 2px solid ${({ theme }) => theme && theme["borderColor"]};
     width: 100%;
     height: 100%;
-
     background: #fff;
 `;
 
