@@ -149,6 +149,7 @@ function SignUpPage({ theme }) {
     const mutation = useMutation(signUpDb, {
         onSuccess: (data) => {
             console.log("data >>>", data);
+            deleteInput()
             navigation("/signin");
         },
         onError: (error) => {
