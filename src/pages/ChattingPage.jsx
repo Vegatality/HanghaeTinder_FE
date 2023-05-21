@@ -30,6 +30,7 @@ function ChattingPage() {
     const [type, setType] = useState("ENTER");
     const [like, setLike] = useState(true);
     const [ref, inView] = useInView();
+    const navigate = useNavigate();
 
     // const prevSocket = useSelector((store)=> store.socket.socket)
     // console.log("prevSocket >>> ", prevSocket)
@@ -292,7 +293,7 @@ function ChattingPage() {
                 <ChatContentBox>
                     <ChatLogoImage src="../image/MainPageLogo.svg" alt="photoThumb" />
                     <ChatRoomBackIconwrap>
-                        <ChatRoomBackIcon />
+                        <ChatRoomBackIcon onClick={() => navigate("/chatlist")} />
                     </ChatRoomBackIconwrap>
 
                     <ChatProfileWrap>
