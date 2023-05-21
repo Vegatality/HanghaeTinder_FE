@@ -182,7 +182,7 @@ function ChattingPage() {
                     /* data.body가 object로 오는 경우 : 내가 보낸 메시지를 서버가 즉각적으로 response 하는 경우  */
                     /** @chatMessages_왜_초기화_됨 */
                     console.log("chatMessages >>>", chatMessages);
-                    chatMessages.push(JSON.parse(data.body));
+                    chatMessages.unshift(JSON.parse(data.body));
                     // const messageHistory = [...chatMessages, response];
                     // console.log("mshistory>>>", messageHistory);
                     setChatMessages([...chatMessages]);
