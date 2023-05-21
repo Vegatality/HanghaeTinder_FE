@@ -8,14 +8,13 @@ import SockJS from "sockjs-client";
 import { Client, Stomp } from "@stomp/stompjs";
 import { cookie } from "../util/cookie";
 import jwtDecode from "jwt-decode";
-import Loading from "../components/Loading"
+import Loading from "../components/Loading";
 import { debounce } from "lodash";
 import { InView, useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 
-
 function ChattingPage() {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
     const isConnected = useRef("");
     const stompClient = useRef(null);
 
@@ -28,30 +27,25 @@ function ChattingPage() {
     /* 내가 이전에 받은 메시지 배열 + 내가 받아오는 메시지 배열(*내가 금방 보낸 것도 다시 받아옴) */
     const [chatMessages, setChatMessages] = useState([]);
     const [page, setPage] = useState(0);
-    const [type, setType] = useState("ENTER")
-    const [like, setLike] = useState(true)
+    const [type, setType] = useState("ENTER");
+    const [like, setLike] = useState(true);
     const [ref, inView] = useInView();
 
     // const prevSocket = useSelector((store)=> store.socket.socket)
     // console.log("prevSocket >>> ", prevSocket)
     /* 처음 포커스 잡아주는 ref */
-    const focusRef = useRef()
-
+    const focusRef = useRef();
 
     const unLike = () => {
-        setLike(!like)
-    }
-    const location = useLocation()
+        setLike(!like);
+    };
+    const location = useLocation();
 
     const checkCookie = cookie.get("auth");
     const decodedToken = jwtDecode(checkCookie);
     const { sub: userId, exp } = decodedToken;
     /* 이 roomId 를 새로고침 했을 때도 과연 기억하는가? state에 넣어둬야 하는가? */
     const { roomId, roomName } = location.state;
-
-
-
-
 
     const connect = () => {
         // SockJS같은 별도의 솔루션을 이용하고자 하면 over 메소드를, 그렇지 않다면 Client 메소드를 사용해주면 되는 듯.
@@ -77,9 +71,7 @@ function ChattingPage() {
 
             // 검증 부분
             webSocketFactory: () => {
-                const socket = new SockJS(
-                    "http://222.102.175.141:8080/ws-stomp"
-                );
+                const socket = new SockJS("http://15.164.159.168:8080/ws-stomp");
                 socket.onopen = function () {
                     socket.send(
                         JSON.stringify({
@@ -89,7 +81,6 @@ function ChattingPage() {
                 };
                 return socket;
             },
-
 
             // 검증이 돼서 Room을 열어주는 서버랑 연결이 되면
             onConnect: async () => {
@@ -102,9 +93,7 @@ function ChattingPage() {
 
             onStompError: (frame) => {
                 console.log(frame);
-                console.log(
-                    "Broker reported error: " + frame.headers["message"]
-                );
+                console.log("Broker reported error: " + frame.headers["message"]);
                 console.log("Additional details: " + frame.body);
             },
             onWebSocketError: (frame) => {
@@ -128,7 +117,6 @@ function ChattingPage() {
         // stompClient.current.connect({})
     };
 
-
     const disconnect = () => {
         /* stompClient.current.deactivate()와 stompClient.current.disconnect()는 STOMP 프로토콜을 사용하여 서버와의 연결을 해제하는 데 사용되는 메서드입니다. 
         그러나 두 메서드는 약간 다른 동작을 수행합니다.  stompClient.current.deactivate(): 이 메서드는 현재 STOMP 클라이언트의 연결을 비활성화합니다. 
@@ -140,7 +128,7 @@ function ChattingPage() {
         요약하면, deactivate() 메서드는 연결을 비활성화하고 재활성화할 수 있지만, disconnect() 메서드는 연결을 완전히 종료하고 새로운 연결을 설정해야합니다. 
         어떤 메서드를 선택할지는 상황과 사용자의 요구에 따라 다를 수 있습니다. */
         // stompClient.current.deactivate();
-        stompClient.current.disconnect()
+        stompClient.current.disconnect();
         /* unsubscribe에 destination 주소를 적어주면 된다. */
         // stompClient.current.unsubscribe("/destination")
     };
@@ -150,53 +138,57 @@ function ChattingPage() {
     // );
     // stompClient.current = Stomp.over(socket);
 
-    const subscribe = async () => {
-        await stompClient.current.subscribe(
+    const subscribe = () => {
+        console.log("roomID >>> ", roomId);
+        stompClient.current.subscribe(
             `/sub/chat/room/${roomId}`,
 
             (data) => {
-                console.log(
-                    " 구독이 잘 되었습니다. >>>",
-                    JSON.parse(data.body)
-                );
-                const response = JSON.parse(data.body)
-                // console.log("response.data.chatMessages >>> ", response.data.chatMessages)
-                // id는 안써서 상관없음.
-                
-                /* from genius 배: 맨 처음에는 우리가 입력한 메시지가 없으니까 그걸로 구별하면 된다 */
-                /* 아! scroll 했을 때도 배열로 받아오는구나!*/
-                if(response?.data.chatMessages && !message){
-                    const messageHistory = [...chatMessages, ...response.data.chatMessages]
-                    setChatMessages(messageHistory)
-                }
+                console.log(" 구독이 잘 되었습니다. >>>", JSON.parse(data.body));
+                const response = JSON.parse(data.body);
+                // console.log("data.body>>>", data.body);
+                console.log(1);
 
-                if (response?.data.hasOwnProperty('chatMessages')) {
-                    setPage((prevNum) => prevNum + 1);
+                /** @서버쪽에서_Type도_보내줬어야_했음_아니면_구별이_안_됨 */
+                /* 아! scroll 했을 때도 배열로 받아오는구나!*/
+                /** @지금_치고_있는_메시지가_있어도_받아오긴_해야지 */
+                if (response?.data?.chatMessages) {
+                    console.log("채팅배열 통과했니? >>> ", response);
+                    console.log(2);
+                    /** @예전_메시지는_화면에_뿌릴_때_뒤집어_줘야함 */
+                    chatMessages.push(...response.data.chatMessages);
+
+                    /** @배정현님의 어록: 의존성이 존재를 해서 그렇다. */
+                    // const messageHistory = [...chatMessages, ...response.data.chatMessages];
+                    // const messageHistory = [...response.data.chatMessages];
+                    // setChatMessages([...messageHistory].reverse());
+                    /** @page_순서는_0번째가_최신_근데_페이지_내부_요소는_0번째가_제일_예전꺼 */
+                    // setChatMessages([...chatMessages].reverse());
+                    setChatMessages([...chatMessages]);
+                    // const nextPage = page + 1;
+                    const nextPage = response.data.page;
+                    console.log(nextPage);
+                    setPage(nextPage + 1);
+                    setTotalPage(response.data.totalPages);
+
+                    // setType("TALK");
+
+                    /** @보냈을_때_즉각적으로_돌아오는_건_객체여야_함 */
+                } else if (data.body) {
+                    // console.log("채팅객체 통과했니? >>>", response);
+                    console.log(3);
+                    // setPage((prevNum) => prevNum + 1);
                     /* checkPoint */
                     /* data.body가 object로 오는 경우 : 내가 보낸 메시지를 서버가 즉각적으로 response 하는 경우  */
-                    const messageHistory = [...chatMessages, data.body]
-                    setChatMessages(messageHistory);
-
-                    setTotalPage(response.data.totalPages)
+                    /** @chatMessages_왜_초기화_됨 */
+                    console.log("chatMessages >>>", chatMessages);
+                    chatMessages.push(JSON.parse(data.body));
+                    // const messageHistory = [...chatMessages, response];
+                    // console.log("mshistory>>>", messageHistory);
+                    setChatMessages([...chatMessages]);
+                    // focusRef.current.scrollIntoView({ behavior: "smooth" });
                 }
-                /* 이 채팅방에 처음으로 진입했을 경우 || 내가 메시지를 보낸 경우  => 이 때 바닥으로 꽂고싶다. */
-                if ((response?.data.hasOwnProperty('chatMessages') && response?.data.page === 0) || !response.data.hasOwnProperty('chatmessages')) {
-                    focusRef.current.scrollIntoView({ behavior: 'smooth' })
-                }
-
-                // if( type==="TALK"  ) {
-                //     focusRef.current.scrollIntoView({ behavior: 'smooth'})
-                // }
-
-                // if (response.data.chatMessages && isLoading === false) {
-                //     // prevMsg는 이전 메시지 배열, response...는 실시간으로 새로 들어오는 메시지 배열
-                //     console.log("상대방 아이디 >>>", response.data.chatMessages.find((ele) => ele.sender !== userId).sender)
-                //     console.log("내 아이디 >>>", response.data.chatMessages.find((ele) => ele.sender === userId).sender)
-                //     setChatMessages((prevMsg) => [...prevMsg, ...response.data.chatMessages])
-                // } else {
-                //     return
-                // }
-
+                console.log(4);
             }
             // ({ body }) => {
             //     setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
@@ -204,12 +196,13 @@ function ChattingPage() {
         );
     };
 
-    console.log("chatMsg >>>>>", chatMessages)
+    // console.log("chatMsg >>>>>", chatMessages)
 
     const publish = async () => {
         if (!stompClient.current.connected) {
             return;
         }
+        console.log("publish 시작");
         // if (!stompClient.current.connected) {
         //     return;
         // }
@@ -223,25 +216,23 @@ function ChattingPage() {
             body: JSON.stringify({
                 type: "ENTER",
                 roomId,
-                page
+                page,
             }),
-            headers: { authorization: `Bearer ${checkCookie}` }
+            headers: { authorization: `Bearer ${checkCookie}` },
 
             //
         });
-
-        setIsLoading(false)
+        console.log("publish 끝");
+        setIsLoading(false);
 
         /* my message initiate */
         // setMessage("");
     };
 
-
-
-
-    const textPublish = async () => {
-        if(message !== ""){
-            await stompClient.current.publish({
+    const textPublish = () => {
+        console.log("textPublish Start");
+        if (message !== "") {
+            stompClient.current.publish({
                 destination: "/pub/chat/message",
                 // body: JSON.stringify({
                 //     roomSeq: "63b8fe74-6adf-4bb6-94f5-b7b612dcc8b2",
@@ -252,52 +243,35 @@ function ChattingPage() {
                     type: "TALK",
                     roomId,
                     userId,
-                    message
+                    message,
                 }),
                 headers: { authorization: `Bearer ${checkCookie}` },
                 //
             });
-            setMessage("")
+            console.log("textPublish End");
+            setMessage("");
         }
-        
-    }
-
-    
-
-
-
-    // useEffect(() => {
-    //     testConnection();
-
-
-    //     // return () => {
-    //     //     stompClient.disconnect();
-    //     // };
-
-    //     return () => stompClient.disconnect()
-    // }, []);
-
-    useEffect(()=> {
-        setToggleLoading((state)=> !state);
-    }, [chatMessages])
-
+    };
 
     /* Scroll */
     useEffect(() => {
-        console.log("inview, totalpage >>>" ,inView, totalPage);
-        if (inView && (page + 1) < totalPage) {
+        console.log("inview, totalpage >>>", inView, totalPage);
+        // setType("ENTER");
+        if (inView && page + 1 < totalPage) {
+            console.log("page >>>", page);
             publish();
         }
-    }, [inView,chatMessages]);
+    }, [inView, chatMessages]);
     // }, [fetch, hasNextPage, inView]);
 
     useEffect(() => {
-
         connect();
+        if (focusRef.current) {
+            focusRef.current.scrollTop = focusRef.current.scrollHeight;
+        }
         // subscribe()
         // publish()
         // focusRef.current.focus()
-
 
         // 컴포넌트 언마운트 시 연결 해제 => 굳이 채팅방 넘어갈 때 구독 해제해야 하는지 생각해보자.
         // 페이지 넘어가도 소켓을 disconnect를 안했으니까 유지되고 있는 상태!
@@ -309,52 +283,50 @@ function ChattingPage() {
             <div>
                 <Loading />
             </div>
-        )
+        );
     }
 
+    return (
+        <>
+            <ChatRoomWrap>
+                <ChatContentBox>
+                    <ChatLogoImage src="../image/MainPageLogo.svg" alt="photoThumb" />
+                    <ChatRoomBackIconwrap>
+                        <ChatRoomBackIcon />
+                    </ChatRoomBackIconwrap>
 
-    return <>
-        <ChatRoomWrap>
-            <ChatContentBox>
-                <ChatLogoImage
-                    src="../image/MainPageLogo.svg"
-                    alt="photoThumb"
-                />
-                <ChatRoomBackIconwrap>
-                    <ChatRoomBackIcon />
-                </ChatRoomBackIconwrap>
+                    <ChatProfileWrap>
+                        <ChatProfileImgWrap>
+                            <ChatProfileImg />
+                        </ChatProfileImgWrap>
 
-                <ChatProfileWrap>
-                    <ChatProfileImgWrap>
-                        <ChatProfileImg />
-                    </ChatProfileImgWrap>
+                        <ChatProfiletitleWrap>
+                            <ChatProfiletitle>{roomName}</ChatProfiletitle>
+                            {like ? <ChatHeartIcon onClick={unLike} /> : <ChatUnHeartIcon onClick={unLike} />}
+                        </ChatProfiletitleWrap>
+                    </ChatProfileWrap>
 
-                    <ChatProfiletitleWrap>
-                        <ChatProfiletitle>{roomName}</ChatProfiletitle>
-                        {like ? <ChatHeartIcon onClick={unLike} /> : <ChatUnHeartIcon onClick={unLike} />}
-                    </ChatProfiletitleWrap>
-                </ChatProfileWrap>
-
-                <ChatContentWrap inView={InView}>
-                    <div ref={ref}></div>
-                    {
-                        chatMessages.slice().reverse().map((data, idx) =>
-                            data.sender === userId ?
-                                <MyChatWrap key={idx}>
-                                    <WrittenTime>{data.createdAt}</WrittenTime><MyChat>{data.message}</MyChat>
-                                </MyChatWrap> :
-                                <YourChatWrap key={idx}>
-                                    <YourProfileImgWrap>
-                                        <YourProfileImg />
-                                    </YourProfileImgWrap>
-                                    <YourChat>{data.message}</YourChat><WrittenTime>{data.createdAt}</WrittenTime>
-                                </YourChatWrap>
-
-                        )
-                    }
-
-
-                    {/* <YourChatWrap>
+                    <ChatContentWrap ref={focusRef} inView={InView}>
+                        {[...chatMessages]
+                            // .slice()
+                            // .reverse()
+                            .map((data, idx) =>
+                                data.sender === userId ? (
+                                    <MyChatWrap key={idx}>
+                                        <WrittenTime>{data.createdAt}</WrittenTime>
+                                        <MyChat>{data.message}</MyChat>
+                                    </MyChatWrap>
+                                ) : (
+                                    <YourChatWrap key={idx}>
+                                        <YourProfileImgWrap>
+                                            <YourProfileImg />
+                                        </YourProfileImgWrap>
+                                        <YourChat>{data.message}</YourChat>
+                                        <WrittenTime>{data.createdAt}</WrittenTime>
+                                    </YourChatWrap>
+                                )
+                            )}
+                        {/* <YourChatWrap>
                         <YourProfileImgWrap>
                             <YourProfileImg />
                         </YourProfileImgWrap>
@@ -363,25 +335,25 @@ function ChattingPage() {
                     <MyChatWrap>
                         <WrittenTime>작성시간</WrittenTime><MyChat>사용자 채팅 내용</MyChat>
                     </MyChatWrap> */}
-                    <div style={{ height: "2px" }} ref={focusRef} />
-                </ChatContentWrap>
-                <ChatInput value={message} onChange={(e) => setMessage(e.target.value)} cols="30" rows="10" />
-                <SendBtnWrap>
-                    <SendBtn onClick={textPublish}/>
-                </SendBtnWrap>
-            </ChatContentBox>
-        </ChatRoomWrap>
-    </>;
+                        {/* <div style={{ height: "2px" }} ref={focusRef} /> */}
+                        <div ref={ref}></div>
+                    </ChatContentWrap>
+                    <ChatInput value={message} onChange={(e) => setMessage(e.target.value)} cols="30" rows="10" />
+                    <SendBtnWrap>
+                        <SendBtn onClick={textPublish} />
+                    </SendBtnWrap>
+                </ChatContentBox>
+            </ChatRoomWrap>
+        </>
+    );
 }
 
 const ChatRoomWrap = styled.div`
     position: relative;
     width: 100%;
     background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
-        rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 `;
-
 
 const ChatContentBox = styled.div`
     padding: 25px 20px 20px 20px;
@@ -404,11 +376,11 @@ const ChatRoomBackIconwrap = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    &:hover{
+    &:hover {
         transition: all 0.3s;
         transform: scale(0.9);
     }
-`
+`;
 
 const shakeAnimation = keyframes`
   0% { transform: translateX(0); }
@@ -423,7 +395,7 @@ const ChatRoomBackIcon = styled(TiArrowBackOutline)`
     color: white;
     font-size: 36px;
     cursor: pointer;
-`
+`;
 
 const ChatProfileWrap = styled.div`
     display: flex;
@@ -434,14 +406,14 @@ const ChatProfileWrap = styled.div`
     border-bottom: 2px solid ${({ theme }) => theme["borderColor"]};
     box-sizing: border-box;
     padding: 0px 25px 15px 25px;
-`
+`;
 
 const ChatProfileImgWrap = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-`
+`;
 
 const ChatProfileImg = styled.div`
     width: 100%;
@@ -450,56 +422,59 @@ const ChatProfileImg = styled.div`
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-`
+`;
 
 const ChatProfiletitleWrap = styled.div`
     width: 88%;
     display: flex;
     justify-content: space-between;
-`
+`;
 
 const ChatProfiletitle = styled.h2`
     font-size: 26px;
     font-weight: 900;
-`
+`;
 
 const ChatHeartIcon = styled(BsSuitHeartFill)`
     color: ${({ theme }) => theme["borderColor"]};
     font-size: 36px;
     cursor: pointer;
-    &:hover{
+    &:hover {
         transition: all 0.3s;
         animation: ${shakeAnimation} 0.6s;
     }
-`
+`;
 
 const ChatUnHeartIcon = styled(BsSuitHeart)`
     color: ${({ theme }) => theme["borderColor"]};
     font-size: 36px;
     cursor: pointer;
-    &:hover{
+    &:hover {
         transition: all 0.3s;
         animation: ${shakeAnimation} 0.6s;
     }
-`
+`;
 
 const ChatContentWrap = styled.div`
-    padding: 10px 25px;  
+    padding: 10px 25px;
     height: 400px;
     overflow-y: scroll;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
         display: none;
     }
     margin-bottom: 10px;
     position: relative;
-`
+
+    display: flex;
+    flex-direction: column-reverse;
+`;
 
 const YourChatWrap = styled.div`
     display: flex;
     align-items: end;
     gap: 5px;
     margin-block: 15px;
-`
+`;
 
 const YourChat = styled.p`
     height: 40px;
@@ -510,7 +485,7 @@ const YourChat = styled.p`
     font-weight: 900;
     font-size: 14px;
     padding-inline: 10px;
-`
+`;
 
 const MyChatWrap = styled.div`
     display: flex;
@@ -518,7 +493,7 @@ const MyChatWrap = styled.div`
     align-items: end;
     gap: 5px;
     margin-block: 15px;
-`
+`;
 
 const MyChat = styled.p`
     height: 40px;
@@ -529,13 +504,13 @@ const MyChat = styled.p`
     font-weight: 900;
     font-size: 14px;
     padding-inline: 10px;
-`
+`;
 
 const WrittenTime = styled.span`
-    font-size:12px;
+    font-size: 12px;
     font-weight: 900;
     margin-bottom: 5px;
-`
+`;
 
 const ChatInput = styled.textarea`
     position: relative;
@@ -551,10 +526,10 @@ const ChatInput = styled.textarea`
     resize: none;
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
         display: none;
     }
-`
+`;
 
 const SendBtnWrap = styled.div`
     position: absolute;
@@ -565,11 +540,11 @@ const SendBtnWrap = styled.div`
     box-sizing: border-box;
     border-radius: 50%;
     text-align: center;
-    &:hover{
+    &:hover {
         transition: all 0.3s;
         animation: ${shakeAnimation} 0.6s;
     }
-`
+`;
 
 const YourProfileImgWrap = styled.div`
     width: 40px;
@@ -578,7 +553,7 @@ const YourProfileImgWrap = styled.div`
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
     background-color: rgba(254, 86, 101, 0.2);
-`
+`;
 
 const YourProfileImg = styled.div`
     width: 100%;
@@ -587,11 +562,11 @@ const YourProfileImg = styled.div`
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-`
+`;
 
 const SendBtn = styled(BiSend)`
     color: white;
     font-size: 24px;
-`
+`;
 
 export default ChattingPage;

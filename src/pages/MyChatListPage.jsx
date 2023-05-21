@@ -188,7 +188,7 @@ function MyChatListPage() {
 
     // console.log("쿠키에서 꺼낸 토큰 >>>", checkCookie);
 
-    const socket = new SockJS("http://222.102.175.141:8080/ws-stomp");
+    const socket = new SockJS("http://15.164.159.168:8080/ws-stomp");
     const stompClient = Stomp.over(() => socket);
     const testConnection = async () => {
         // const SC = Stomp.over(() => socket);
