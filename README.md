@@ -4,8 +4,7 @@ BE: 조우필, 김지승, 김현준, 김근보
 
 ![image](https://github.com/hangheTinder/.github/assets/40461588/8cb4fedc-da86-4fda-b008-26d57bba5a22)
 
-
-##⌚프로젝트 기간
+## ⌚프로젝트 기간
 23.05.12 ~ 23.05.18
 
 ## Project Architecture 🛠
