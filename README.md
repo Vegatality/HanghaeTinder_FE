@@ -33,5 +33,13 @@ Tinder 클론 프로젝트
 <br/>
 <div align=center>
 <img src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/06c10470-7248-4d5b-b0c5-a1052b6a293b" width='800px'/>
+<img src="https://github.com/Vegatality/tailwindExample/assets/123563774/dad6277d-f9e1-493e-b3c8-4693e1ebf212" width="800px" />
+</div>
+</details>
+<details>
+<summary>매칭 페이지</summary>
+<br/>
+<div align=center>
+<img src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/06c10470-7248-4d5b-b0c5-a1052b6a293b" width='800px'/>
 </div>
 </details>
