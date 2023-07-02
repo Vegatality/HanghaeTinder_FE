@@ -7,6 +7,9 @@ BE: 조우필, 김지승, 김현준, 김근보
 ## ⌚프로젝트 기간
 23.05.12 ~ 23.05.18
 
+## 프로젝트 소개
+Tinder 클론 프로젝
+
 ## Project Architecture 🛠
 <img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/043c0873-f536-4ba4-aff7-64f40138b0c3)"/>
 
@@ -23,3 +26,5 @@ BE: 조우필, 김지승, 김현준, 김근보
 ![Redux Toolkit](https://img.shields.io/badge/-Redux%20Toolkit-764ABC?logo=redux&logoColor=white)
 ![styled-components](https://img.shields.io/badge/-styled--components-DB7093?logo=styled-components&logoColor=white)
 ![JWT](https://img.shields.io/badge/-JWT-000000?logo=json-web-tokens&logoColor=white)
+
+## 주요 기능 및 서비스 이미지
