@@ -57,25 +57,25 @@ Tinder 클론 프로젝트
 |------|------|
 |원인|채팅방에서 위로 스크롤 했을 때 scrollTop의 높이가 0이 되면 이전의 채팅 기록을 한 페이지 불러오도록 설계하였음. 그러나 진입하자마자 맨 위로 포커스가 맞춰져 있어서 이전 채팅 목록을 여러 번 불러오는 현상이 있었음|
 |시도|useEffect 문 안에 ScrollTo를 이용하여 진입 시 맨 바닥으로 옮기려는 시도를 했으나, 여전히 이전 채팅 목록을 불러와서 실패.|
-|해결|CSS의 justify-reverse 라는 속성을 통해서 포커스를 맨 밑부터 줄 수 있었습니다.|
+|해결|CSS의 justify-reverse 라는 속성을 통해서 진입 했을 때 포커스를 맨 밑부터 시작할 수 있었습니다.|
 
 <ul>
 <li>
 <table width='800px'>
 <tr>
-<th colspan="2" align="center" height="50">채팅방에 입장 후 화면 공유 시 접속한 사람은 스크린으로 공유 되는 것으로 보이나 다른 유저들에겐 공유가 되지 않는 문제</th>
+<th colspan="2" align="center" height="50">채팅방에 진입했을 때 포커스가 맨 밑부터 시작하지 않고 맨 위에서부터 시작하는 문제</th>
 </tr>
 <tr>
 <th width="70">원인</th>
-<td>스크린 publish는 잘 생성되나, 접속한 다른 사람들에게 모두 공유되는 subscribers 배열의 내부 publish는 기존 publish를 가지고 있고 업데이트를 하지 않았기 때문에 발생한 문제.</td>
+<td>채팅방에서 위로 스크롤 했을 때 scrollTop의 높이가 0이 되면 이전의 채팅 기록을 한 페이지 불러오도록 설계하였음. 그러나 진입하자마자 맨 위로 포커스가 맞춰져 있어서 이전 채팅 목록을 여러 번 불러오는 현상이 있었음</td>
 </tr>
 <tr>
 <th>시도</th>
-<td>스크린 publish가 생기면 useEffect를 통해 subscribers를 최신 상태로 업데이트 함.</td>
+<td>useEffect 문 안에 ScrollTo를 이용하여 진입 시 맨 바닥으로 옮기려는 시도를 했으나, 여전히 이전 채팅 목록을 불러와서 실패.</td>
 </tr>
 <tr>
 <th>해결</th>
-<td>간혈적으로 스크린 publish가 성공했다가, 실패하는 현상이 발생함. subscribers를 업데이트 하는 useState의 setSubscribers를 함수형으로 처리하여서 배치처리를 막고 동기처리 되도록 수정하여 해결.</td>
+<td>justify-reverse 라는 속성을 통해서 진입 했을 때 포커스를 맨 밑부터 시작할 수 있었습니다.</td>
 </tr>
 </table>
 </li>
