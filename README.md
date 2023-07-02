@@ -1,6 +1,12 @@
 ### 항해99 클론 프로젝트 13조 
+FE: 조형민, 신희제
+BE: 조우필, 김지승, 김현준, 김근보
 
 ![image](https://github.com/hangheTinder/.github/assets/40461588/8cb4fedc-da86-4fda-b008-26d57bba5a22)
+
+
+##⌚프로젝트 기간
+23.05.12 ~ 23.05.18
 
 ## Project Architecture 🛠
 <img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/043c0873-f536-4ba4-aff7-64f40138b0c3)"/>
