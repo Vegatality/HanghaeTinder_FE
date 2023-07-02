@@ -14,3 +14,7 @@
 ![React Router](https://img.shields.io/badge/-React%20Router-CA4245?logo=react-router&logoColor=white)
 ![SockJS](https://img.shields.io/badge/-SockJS-808080?logo=sockjs&logoColor=white)
 ![STOMP](https://img.shields.io/badge/-STOMP-D61617?logo=stomp&logoColor=white)
+![Redux](https://img.shields.io/badge/-Redux-764ABC?logo=redux&logoColor=white)
+![Redux Toolkit](https://img.shields.io/badge/-Redux%20Toolkit-764ABC?logo=redux&logoColor=white)
+![styled-components](https://img.shields.io/badge/-styled--components-DB7093?logo=styled-components&logoColor=white)
+![JWT](https://img.shields.io/badge/-JWT-000000?logo=json-web-tokens&logoColor=white)
