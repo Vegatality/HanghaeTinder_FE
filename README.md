@@ -50,3 +50,10 @@ Tinder 클론 프로젝트
 <img src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/4a972e2a-b8a5-4550-839a-537cbad355ec" width="800px" />
 </div>
 </details>
+
+## Trouble Shooting
+|제목|내용|설명|
+|------|---|---|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
