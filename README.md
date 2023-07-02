@@ -69,7 +69,30 @@ Tinder 클론 프로젝트
 </tr>
 <tr>
 <th>해결</th>
-<td>justify-reverse 라는 속성을 통해서 진입 했을 때 포커스를 맨 밑부터 시작할 수 있었습니다.</td>
+<td>flex-direction: column-reverse 라는 속성을 통해서 진입 했을 때 포커스를 맨 밑부터 시작할 수 있었습니다.</td>
 </tr>
 </table>
 </li>
+</ul>
+
+<ul>
+<li>
+<table width='800px'>
+<tr>
+<th colspan="2" align="center" height="50">소켓으로 최신 데이터는 가져왔으나 렌더링이 되지 않는 문제가 있었습니다.</th>
+</tr>
+<tr>
+<th width="70">원인</th>
+<td>객체의 depth를 고려하지 않고 spread 문법을 사용해서 얕은 복사를 하였기 때문에 참조형 데이터의 변수 영역이 바뀌지 않아 렌더링이 되지 않았던 것이었습니다.</td>
+</tr>
+<tr>
+<th>시도</th>
+<td>새로운 변수를 만들어서 response.data.chatMessages를 spread 연산자를 이용해 얕은 복사를 하여 넣었으나 여전히 완전한 복사가 아니었기 때문에 렌더링이 발생하지 않았습니다.</td>
+</tr>
+<tr>
+<th>해결</th>
+<td>state 배열에 push 메서드를 통해서 새로 받아온 채팅을 넣고 그 후에 얕은 복사를 하여서 변수영역을 갈아끼워 새로운 채팅에 대한 렌더링을 발생시킬 수 있었습니다.</td>
+</tr>
+</table>
+</li>
+</ul>
