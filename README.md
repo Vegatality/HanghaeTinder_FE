@@ -40,6 +40,6 @@ Tinder 클론 프로젝트
 <summary>매칭 페이지</summary>
 <br/>
 <div align=center
-<img src="https://github.com/Vegatality/tailwindExample/assets/123563774/dc5fac62-93d7-42f0-90c5-a4b705ad1d01" width="800px" />
+<img src="https://github.com/Vegatality/tailwindExample/assets/123563774/32450cb9-64b9-481e-9d67-ec1c7ad51eb9" width="800px" />
 </div>
 </details>
