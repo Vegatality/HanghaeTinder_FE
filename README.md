@@ -29,9 +29,9 @@ Tinder 클론 프로젝트
 
 ## 주요 기능 및 서비스 이미지
 <details>
-<summary>화상 채팅 + 음성 채팅 + 일반 채팅 + 화면공유가 가능한 <b>모각코 룸</b></summary>
+<summary>회원가입 + 로그인</summary>
 <br/>
 <div align=center>
-<img src='https://github.com/godjooyoung/final_fe/assets/58963027/ca3eb39b-846b-49e0-9654-96c6f52b0fd1' width='800px'>
+<img src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/06c10470-7248-4d5b-b0c5-a1052b6a293b" width='800px'/>
 </div>
 </details>
