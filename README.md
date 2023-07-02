@@ -11,7 +11,7 @@ BE: 조우필, 김지승, 김현준, 김근보
 Tinder 클론 프로젝트
 
 ## Project Architecture 🛠
-<img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/043c0873-f536-4ba4-aff7-64f40138b0c3)"/>
+<img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/397e3533-f44e-4b72-9438-7c282643b5da"/>
 
 
 ## 사용한 기술 스택
