@@ -8,7 +8,7 @@ BE: 조우필, 김지승, 김현준, 김근보
 23.05.12 ~ 23.05.18
 
 ## 프로젝트 소개
-Tinder 클론 프로젝
+Tinder 클론 프로젝트
 
 ## Project Architecture 🛠
 <img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/043c0873-f536-4ba4-aff7-64f40138b0c3)"/>
@@ -28,3 +28,10 @@ Tinder 클론 프로젝
 ![JWT](https://img.shields.io/badge/-JWT-000000?logo=json-web-tokens&logoColor=white)
 
 ## 주요 기능 및 서비스 이미지
+<details>
+<summary>화상 채팅 + 음성 채팅 + 일반 채팅 + 화면공유가 가능한 <b>모각코 룸</b></summary>
+<br/>
+<div align=center>
+<img src='https://github.com/godjooyoung/final_fe/assets/58963027/ca3eb39b-846b-49e0-9654-96c6f52b0fd1' width='800px'>
+</div>
+</details>
