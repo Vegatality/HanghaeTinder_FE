@@ -10,7 +10,7 @@ BE: 조우필, 김지승, 김현준, 김근보
 ## 프로젝트 소개
 Tinder 클론 프로젝트
 
-## Project Architecture 🛠
+## FE Project Architecture 🛠
 <img width="80%" src="https://github.com/hangheTinder/HanghaeTinder_FE/assets/123563774/e5d61a99-8377-4257-b32a-10c767ac0d79"/>
 
 
